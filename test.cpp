@@ -28,6 +28,7 @@ int main()
     sf::Sprite ball;
     ball.setTexture(ballTexture);
     
+    int direction = 1;
     while (window.isOpen())
     {
         sf::Event event;
@@ -49,13 +50,22 @@ int main()
             paddle.move(0, 1);
         }
         
-        if (ball.getGlobalBounds().intersects(paddle.getGlobalBounds())) {
-            window.clear();
-            cout << "COLLISION" << endl;
-        } else {
-            window.display();
-            cout << "Not Collision" << endl;
+        // if (ball.getGlobalBounds().intersects(paddle.getGlobalBounds())) {
+        //     window.clear();
+        //     cout << "COLLISION" << endl;
+        // } else {
+        //     window.display();
+        //     cout << "Not Collision" << endl;
+        // }
+        
+        sf::Vector2f ballPos = ball.getPosition();
+        cout << ballPos.x << endl;
+        if (ballPos.x == 0) {
+            direction = 1;
+        } else if (ballPos.x == 450) {
+            direction = -1;
         }
+        ball.move(direction,0);
 
         window.clear();
         window.draw(paddle);
