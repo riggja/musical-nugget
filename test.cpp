@@ -2,9 +2,16 @@
 #include <iostream>
 using namespace std;
 
+bool debug = false;
+
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(500, 500), "SFML works!");
+    int resX = 1280, resY = 820;
+    int newH = (1920*resY)/resX;
+    int displace = (newH - 1080)/(-2);
+    sf::RenderWindow window(sf::VideoMode(resX, resY), "SFML works!");
+    window.setFramerateLimit(30);
+    window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
     
     // sf::RectangleShape paddle(sf::Vector2f(50, 120));
     // paddle.setFillColor(sf::Color::Green);
@@ -50,16 +57,20 @@ int main()
             paddle.move(0, 1);
         }
         
-        // if (ball.getGlobalBounds().intersects(paddle.getGlobalBounds())) {
-        //     window.clear();
-        //     cout << "COLLISION" << endl;
-        // } else {
-        //     window.display();
-        //     cout << "Not Collision" << endl;
-        // }
+        if (ball.getGlobalBounds().intersects(paddle.getGlobalBounds())) {
+            // window.clear();
+            if (debug) {
+                cout << "COLLISION" << endl;
+            }
+        } else {
+            // window.display();
+            if (debug) {
+                cout << "Not Collision" << endl;
+            }
+        }
         
         sf::Vector2f ballPos = ball.getPosition();
-        cout << ballPos.x << endl;
+        // cout << ballPos.x << endl;
         if (ballPos.x == 0) {
             direction = 1;
         } else if (ballPos.x == 450) {
