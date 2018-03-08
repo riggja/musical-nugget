@@ -6,7 +6,7 @@ bool debug = false;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(1000, 800), "SFML works!");
+    // sf::RenderWindow window(sf::VideoMode(1000, 800), "SFML works!");
     sf::CircleShape shape(25.f);
     shape.setFillColor(sf::Color::Green);
     
