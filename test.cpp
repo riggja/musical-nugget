@@ -6,22 +6,16 @@ bool debug = false;
 
 int main()
 {
-<<<<<<< HEAD
-<<<<<<< HEAD
     sf::RenderWindow window(sf::VideoMode(1000, 800), "SFML works!");
     sf::CircleShape shape(25.f);
     shape.setFillColor(sf::Color::Green);
-
-=======
-    sf::RenderWindow window(sf::VideoMode(500, 500), "SFML works!");
-=======
+    
     int resX = 1280, resY = 820;
     int newH = (1920*resY)/resX;
     int displace = (newH - 1080)/(-2);
     sf::RenderWindow window(sf::VideoMode(resX, resY), "SFML works!");
     window.setFramerateLimit(30);
     window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
->>>>>>> 7c4cb28cd37d3ff17af493dc675a0c66daa9b747
     
     // sf::RectangleShape paddle(sf::Vector2f(50, 120));
     // paddle.setFillColor(sf::Color::Green);
@@ -46,7 +40,6 @@ int main()
     ball.setTexture(ballTexture);
     
     int direction = 1;
->>>>>>> cf861511e454fd176d80ba2d1b0371064ede0ed0
     while (window.isOpen())
     {
         sf::Event event;
