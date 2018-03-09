@@ -1,6 +1,7 @@
 #define _GLIBCXX_USE_CXX11_ABI 0
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <Music.hpp>
 // #include "background.cpp"
 using namespace std;
 
@@ -8,6 +9,19 @@ bool debug = false;
 
 int main()
 {
+    //testing sound
+    sf::Music music;
+    
+    if (!music.openFromFile("StarWarsSong.ogg"))
+    {
+        cout << "cannot load song" << endl;
+    }
+    
+    music.setVolume(50);         // reduce the volume
+    music.setLoop(true);        // set loop
+    
+    music.play();
+    
     // Background t(2); // testing from background.h -> will later implement
     
     sf::Texture backgroundTexture1;
