@@ -1,3 +1,4 @@
+#define _GLIBCXX_USE_CXX11_ABI 0
 #include <SFML/Graphics.hpp>
 #include <iostream>
 using namespace std;
@@ -25,11 +26,11 @@ int main()
     // ball.setFillColor(sf::Color::Blue);
     
     sf::Texture paddleTexture;
-    if (!paddleTexture.loadFromFile("Blue_Lightsaber2.png")) {
+    if (!paddleTexture.loadFromFile(string("resources/images/Blue_Lightsaber2.png"))) {
         cout << "mistake" << endl;
     }
     sf::Texture ballTexture;
-    if (!ballTexture.loadFromFile("death_star.png")) {
+    if (!ballTexture.loadFromFile(string("resources/images/death_star.png"))) {
         cout << "mistake" << endl;
     }
     
