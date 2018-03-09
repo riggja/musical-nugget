@@ -9,7 +9,7 @@
         * Paddles -> move vertically 
         * "Ball" -> bounces off paddles and bottom and top of screen / adds one to the scoreboard when it goes off the left and right sides of the screen
         * Timer -> If Exceeds Parameter given by Options -> Endgame Screen
-* Endgame Screen -> show winner
+* Endgame Screen -> show winner and points
 * Exit -> Elegantly Crashes To Desktop
 
 ## Anticipated Challenges
