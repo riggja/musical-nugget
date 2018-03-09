@@ -2,6 +2,7 @@
 ![Draft](https://preview.c9users.io/mamatt/cptr142_group_project/cptr142_group_project/StarWarsPong.png?_c9_id=livepreview0&_c9_host=https://ide.c9.io)
 
 ## Procedural Flow Diagram
+
 * Welcome Screen -> 1 Player / 2 Player / Exit
     * 1 Player / 2 Player -> Options (Determines time)
     * Options -> Game Duration / Maximum Points
