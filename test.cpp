@@ -7,9 +7,16 @@ bool debug = false;
 
 int main()
 {
-    // sf::RenderWindow window(sf::VideoMode(1000, 800), "SFML works!");
-    sf::CircleShape shape(25.f);
-    shape.setFillColor(sf::Color::Green);
+    sf::Texture backgroundTexture1;
+    if (!backgroundTexture1.loadFromFile("resources/images/Background1.jpg")) {
+        cout << "cannot load background" << endl;
+    }
+    sf::Texture backgroundTexture2;
+    if (!backgroundTexture2.loadFromFile("resources/images/Background2.jpg")) {
+        cout << "cannot load background" << endl;
+    }
+    sf::Sprite background;
+    background.setTexture(backgroundTexture1);
     
     int resX = 1280, resY = 820;
     int newH = (1920*resY)/resX;
@@ -40,6 +47,7 @@ int main()
     sf::Sprite ball;
     ball.setTexture(ballTexture);
     
+    int Time = 1;
     int direction = 1;
     while (window.isOpen())
     {
@@ -83,7 +91,14 @@ int main()
         }
         ball.move(direction,0);
 
+        if (Time % 2 == 0) {
+            background.setTexture(backgroundTexture2);
+        } else {
+            background.setTexture(backgroundTexture1);
+        } Time++;
+
         window.clear();
+        window.draw(background);
         window.draw(paddle);
         window.draw(ball);
         window.display();
