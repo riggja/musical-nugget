@@ -1,7 +1,7 @@
 #define _GLIBCXX_USE_CXX11_ABI 0
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
-#include <Music.hpp>
 // #include "background.cpp"
 using namespace std;
 
@@ -12,7 +12,7 @@ int main()
     //testing sound
     sf::Music music;
     
-    if (!music.openFromFile("StarWarsSong.ogg"))
+    if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
     {
         cout << "cannot load song" << endl;
     }
