@@ -9,6 +9,20 @@ bool debug = false;
 
 int main()
 {
+
+    //testing sound
+    sf::Music music;
+    music.openFromFile("resources/audio/StarWarsSong.ogg");
+    if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
+    {
+        cout << "cannot load song" << endl;
+    }
+    
+    music.setVolume(50);         // reduce the volume
+    music.setLoop(true);        // set loop
+    
+    music.play();
+
     
     // Background t(2); // testing from background.h -> will later implement
     
@@ -37,15 +51,7 @@ int main()
     // sf::RectangleShape ball(sf::Vector2f(50, 50));
     // ball.setFillColor(sf::Color::Blue);
     
-    //testing sound
-    sf::Music music;
-    
-    if (!music.openFromFile("StarWarsSong.ogg"))
-    {
-        cout << "cannot load song" << endl;
-    }
-
-    music.play();
+   
     
     sf::Texture paddleTexture;
     if (!paddleTexture.loadFromFile(string("resources/images/Blue_Lightsaber2.png"))) {
