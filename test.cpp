@@ -25,11 +25,11 @@ int main()
     // ball.setFillColor(sf::Color::Blue);
     
     sf::Texture paddleTexture;
-    if (!paddleTexture.loadFromFile("CharacterSprite.jpg")) {
+    if (!paddleTexture.loadFromFile("Blue_Lightsaber2.png")) {
         cout << "mistake" << endl;
     }
     sf::Texture ballTexture;
-    if (!ballTexture.loadFromFile("BallSprite.jpg")) {
+    if (!ballTexture.loadFromFile("death_star.png")) {
         cout << "mistake" << endl;
     }
     
@@ -76,9 +76,9 @@ int main()
         sf::Vector2f ballPos = ball.getPosition();
         // cout << ballPos.x << endl;
         if (ballPos.x == 0) {
-            direction = 1;
+            direction = 3;
         } else if (ballPos.x == 450) {
-            direction = -1;
+            direction = -3;
         }
         ball.move(direction,0);
 

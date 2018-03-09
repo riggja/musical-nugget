@@ -42,5 +42,12 @@ __Individual Tasks / Responsibilities__
 __Timelines__
 
 * 3/1: Displaying Title Screen / Ability to Navigate between Screens
+    * Jason will work on sound and art 
+    * Matthew will work on screen transitions
 * 3/5: Working Prototype
+    * Cameron will work on AI 
+    * Matthew will work on physics for the ball
+    * Jason will work on art and help with testing 
 * 3/10: Powerups / Unnecessarily Lucrative Addons
+    * at this point the basic game should be done
+    * All of us will work on the addition of extra addons
