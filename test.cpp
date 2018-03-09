@@ -1,12 +1,15 @@
 #define _GLIBCXX_USE_CXX11_ABI 0
 #include <SFML/Graphics.hpp>
 #include <iostream>
+// #include "background.cpp"
 using namespace std;
 
 bool debug = false;
 
 int main()
 {
+    // Background t(2); // testing from background.h -> will later implement
+    
     sf::Texture backgroundTexture1;
     if (!backgroundTexture1.loadFromFile("resources/images/Background1.jpg")) {
         cout << "cannot load background" << endl;
@@ -47,7 +50,7 @@ int main()
     sf::Sprite ball;
     ball.setTexture(ballTexture);
     
-    int Time = 1;
+    sf::Clock Clock;
     int direction = 1;
     while (window.isOpen())
     {
@@ -90,12 +93,12 @@ int main()
             direction = -3;
         }
         ball.move(direction,0);
-
-        if (Time % 2 == 0) {
+        
+        if (int(Clock.getElapsedTime().asSeconds()) % 2 == 0) {
             background.setTexture(backgroundTexture2);
         } else {
             background.setTexture(backgroundTexture1);
-        } Time++;
+        } 
 
         window.clear();
         window.draw(background);
