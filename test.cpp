@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
+#include "menu.cpp"
 // #include "background.cpp"
 using namespace std;
 
@@ -22,7 +23,6 @@ int main()
     music.setLoop(true);        // set loop
     
     music.play();
-
     
     // Background t(2); // testing from background.h -> will later implement
     
@@ -43,6 +43,8 @@ int main()
     sf::RenderWindow window(sf::VideoMode(resX, resY), "SFML works!");
     window.setFramerateLimit(30);
     window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
+    
+    Menu menu(window.getSize().x, window.getSize().y);
     
     // sf::RectangleShape paddle(sf::Vector2f(50, 120));
     // paddle.setFillColor(sf::Color::Green);
@@ -77,6 +79,34 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
+                
+            switch(event.type) {
+                case sf::Event::KeyReleased:
+                    switch (event.key.code) {
+                        case sf::Keyboard::Up:
+                            std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
+                            menu.MoveUp();
+                            break;
+                            
+                        case sf::Keyboard::Down:
+                            menu.MoveDown();
+                            std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
+                            break;
+                            
+                        case sf::Keyboard::Return:
+                            switch (menu.GetPressedItem()) {
+                                case 0:
+                                    std::cout << "Play button has been pressed" << std::endl;
+                                    break;
+                                case 1:
+                                    std::cout << "Option button has been pressed" << std::endl;
+                                    break;
+                                case 2:
+                                    window.close();
+                                    break;
+                            }
+                    }
+            }
         }
         
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -122,6 +152,7 @@ int main()
         window.draw(background);
         window.draw(paddle);
         window.draw(ball);
+        menu.draw(window);
         window.display();
     }
 
