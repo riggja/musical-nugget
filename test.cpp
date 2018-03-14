@@ -52,7 +52,7 @@ int main()
     
     // game item files loading
     sf::Texture paddleTexture;
-    if (!paddleTexture.loadFromFile(string("resources/images/Blue_Lightsaber2.png"))) {
+    if (!paddleTexture.loadFromFile(string("resources/images/BlueLightsaber1.png"))) {
         cout << "mistake" << endl;
     }
     sf::Texture ballTexture;
