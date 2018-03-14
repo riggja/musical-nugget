@@ -3,7 +3,7 @@
 #include <SFML/Audio.hpp>
 #include <iostream>
 #include "menu.cpp"
-// #include "background.cpp"
+#include "background.cpp"
 using namespace std;
 
 bool debug = false;
@@ -26,7 +26,7 @@ int main()
     
     music.play();
     
-    // Background t(2); // testing from background.h -> will later implement
+    Background t(2); // testing from background.h -> will later implement
     
     // background file loading
     sf::Texture backgroundTexture1;
@@ -111,6 +111,10 @@ int main()
         
         window.clear();
         
+        if (gameState == 0) {
+            menu.draw(window);
+        }
+        
         if (gameState == 1) {
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             {
@@ -156,9 +160,6 @@ int main()
             window.draw(ball);
         }
         
-        if (gameState == 0) {
-            menu.draw(window);
-        }
         window.display();
     }
 
