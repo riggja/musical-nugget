@@ -2,6 +2,8 @@
 ![Draft](https://preview.c9users.io/mamatt/cptr142_group_project/cptr142_group_project/StarWarsPong.png?_c9_id=livepreview0&_c9_host=https://ide.c9.io)
 
 ## Procedural Flow Diagram
+<<<<<<< HEAD
+
 * Welcome Screen -> 1 Player / 2 Player / Exit
     * 1 Player / 2 Player -> Options (Determines time)
     * Options -> Game Duration / Maximum Points
@@ -9,8 +11,11 @@
         * Paddles -> move vertically 
         * "Ball" -> bounces off paddles and bottom and top of screen / adds one to the scoreboard when it goes off the left and right sides of the screen
         * Timer -> If Exceeds Parameter given by Options -> Endgame Screen
-* Endgame Screen -> show winner
+* Endgame Screen -> show winner and points
 * Exit -> Elegantly Crashes To Desktop
+=======
+![Diagram](https://preview.c9users.io/mamatt/cptr142_group_project/cptr142_group_project/ScreenChangesFlowchart.png?_c9_id=livepreview0&_c9_host=https://ide.c9.io)
+>>>>>>> 9e6c774f4fda921cc53e63cd4923c088fcbf39ad
 
 ## Anticipated Challenges
 * Physics

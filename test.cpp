@@ -1,12 +1,34 @@
 #define _GLIBCXX_USE_CXX11_ABI 0
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 #include <iostream>
+#include "menu.cpp"
+// #include "background.cpp"
 using namespace std;
 
 bool debug = false;
 
 int main()
 {
+    // gameState is 0 if menu, 1 if game is playing, 2 if configuring options
+    int gameState = 0;
+    
+    //testing sound
+    sf::Music music;
+    music.openFromFile("resources/audio/StarWarsSong.ogg");
+    if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
+    {
+        cout << "cannot load song" << endl;
+    }
+    
+    music.setVolume(50);         // reduce the volume
+    music.setLoop(true);        // set loop
+    
+    music.play();
+    
+    // Background t(2); // testing from background.h -> will later implement
+    
+    // background file loading
     sf::Texture backgroundTexture1;
     if (!backgroundTexture1.loadFromFile("resources/images/Background1.jpg")) {
         cout << "cannot load background" << endl;
@@ -18,6 +40,7 @@ int main()
     sf::Sprite background;
     background.setTexture(backgroundTexture1);
     
+    // configuring display window
     int resX = 1280, resY = 820;
     int newH = (1920*resY)/resX;
     int displace = (newH - 1080)/(-2);
@@ -25,13 +48,9 @@ int main()
     window.setFramerateLimit(30);
     window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
     
-    // sf::RectangleShape paddle(sf::Vector2f(50, 120));
-    // paddle.setFillColor(sf::Color::Green);
-    // paddle.setOutlineThickness(10);
-    // paddle.setOutlineColor(sf::Color(250, 150, 100));
-    // sf::RectangleShape ball(sf::Vector2f(50, 50));
-    // ball.setFillColor(sf::Color::Blue);
+    Menu menu(window.getSize().x, window.getSize().y);
     
+    // game item files loading
     sf::Texture paddleTexture;
     if (!paddleTexture.loadFromFile(string("resources/images/Blue_Lightsaber2.png"))) {
         cout << "mistake" << endl;
@@ -47,7 +66,7 @@ int main()
     sf::Sprite ball;
     ball.setTexture(ballTexture);
     
-    int Time = 1;
+    sf::Clock Clock;
     int direction = 1;
     while (window.isOpen())
     {
@@ -56,51 +75,90 @@ int main()
         {
             if (event.type == sf::Event::Closed)
                 window.close();
-        }
-        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-        {
-            // up key is pressed: move our character
-            paddle.move(0, -1);
-        }
-        
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-        {
-            // down key is pressed: move our character
-            paddle.move(0, 1);
-        }
-        
-        if (ball.getGlobalBounds().intersects(paddle.getGlobalBounds())) {
-            // window.clear();
-            if (debug) {
-                cout << "COLLISION" << endl;
+            
+            if (gameState == 0) {   
+                switch(event.type) {
+                    case sf::Event::KeyReleased:
+                        switch (event.key.code) {
+                            case sf::Keyboard::Up:
+                                std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
+                                menu.MoveUp();
+                                break;
+                                
+                            case sf::Keyboard::Down:
+                                menu.MoveDown();
+                                std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
+                                break;
+                                
+                            case sf::Keyboard::Return:
+                                switch (menu.GetPressedItem()) {
+                                    case 0:
+                                        gameState = 1;
+                                        std::cout << "Play button has been pressed" << std::endl;
+                                        break;
+                                    case 1:
+                                        gameState = 2;
+                                        std::cout << "Option button has been pressed" << std::endl;
+                                        break;
+                                    case 2:
+                                        window.close();
+                                        break;
+                                }                   
+                        }
+                }
             }
-        } else {
-            // window.display();
-            if (debug) {
-                cout << "Not Collision" << endl;
-            }
         }
         
-        sf::Vector2f ballPos = ball.getPosition();
-        // cout << ballPos.x << endl;
-        if (ballPos.x == 0) {
-            direction = 3;
-        } else if (ballPos.x == 450) {
-            direction = -3;
-        }
-        ball.move(direction,0);
-
-        if (Time % 2 == 0) {
-            background.setTexture(backgroundTexture2);
-        } else {
-            background.setTexture(backgroundTexture1);
-        } Time++;
-
         window.clear();
-        window.draw(background);
-        window.draw(paddle);
-        window.draw(ball);
+        
+        if (gameState == 1) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+            {
+                // up key is pressed: move our character
+                paddle.move(0, -1);
+            }
+            
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+            {
+                // down key is pressed: move our character
+                paddle.move(0, 1);
+            }
+            
+            if (ball.getGlobalBounds().intersects(paddle.getGlobalBounds())) {
+                // window.clear();
+                if (debug) {
+                    cout << "COLLISION" << endl;
+                }
+            } else {
+                // window.display();
+                if (debug) {
+                    cout << "Not Collision" << endl;
+                }
+            }
+            
+            sf::Vector2f ballPos = ball.getPosition();
+            // cout << ballPos.x << endl;
+            if (ballPos.x == 0) {
+                direction = 3;
+            } else if (ballPos.x == 450) {
+                direction = -3;
+            }
+            ball.move(direction,0);
+            
+            if (int(Clock.getElapsedTime().asSeconds()) % 2 == 0) {
+                background.setTexture(backgroundTexture2);
+            } else {
+                background.setTexture(backgroundTexture1);
+            } 
+                
+            window.draw(background);
+            window.draw(paddle);
+            window.draw(ball);
+        }
+        
+        if (gameState == 0) {
+            menu.draw(window);
+        }
         window.display();
     }
 
