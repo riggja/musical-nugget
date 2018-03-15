@@ -5,6 +5,7 @@
 #include <string>
 #include <stdio.h>
 #include <stdlib.h>
+#include <ctime>
 #include <sstream>
 #include "menu.h"
 #include "Ball.h"
@@ -14,8 +15,17 @@ using namespace std;
 
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2);
 
+void chooseSong(int);
+
+void chooseSound(int);
+
 int main()
 {
+
+    //Random number to decide song/sound
+    srand(time(NULL));
+    int num = rand();
+
     // gameState is 0 if menu, 1 if game is playing, 2 if configuring options
     int gameState = 0;
 
@@ -106,6 +116,7 @@ int main()
                                         gameState = 1;
                                         std::cout << "Play button has been pressed" << std::endl;
                                         music.stop();
+                                        chooseSong(num);
                                         break;
                                     case 1:
                                         gameState = 2;
@@ -134,7 +145,9 @@ int main()
             }
 
             if(backgroundCounter >= 675) backgroundCounter = 0;
-            background.setTexture(textures[backgroundCounter++]);
+            background.setTexture(textures[backgroundCounter]);
+            backgroundCounter++;
+
 
             char ballResult = ball->cont(window);
             if (ballResult) {
@@ -158,11 +171,11 @@ int main()
                 }
             }
 
-
             window.draw(background);
             window.draw(paddle1);
             window.draw(paddle2);
             window.draw(*ball);
+
         }
 
         if (gameState == 0) {
@@ -176,8 +189,6 @@ int main()
 
     return 0;
 }
-
-
 
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2) {
   if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -201,4 +212,34 @@ void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2) {
   } else {
       paddle2.cont(window, 0);
   }
+}
+
+
+void chooseSong(int x){
+
+    if(x%2==0){
+        sf::Music music1;
+        music1.openFromFile("resources/audio/Fate.ogg");
+        if (!music1.openFromFile("resources/audio/Fate.ogg"))
+        {
+            cout << "cannot load song" << endl;
+        }
+
+        music1.setVolume(50);         // reduce the volume
+
+        music1.play();
+
+    } else {
+
+        sf::Music music2;
+        music2.openFromFile("resources/audio/March.ogg");
+        if (!music2.openFromFile("resources/audio/March.ogg"))
+        {
+            cout << "cannot load song" << endl;
+        }
+
+        music2.setVolume(50);         // reduce the volume
+
+        music2.play();
+    }
 }
