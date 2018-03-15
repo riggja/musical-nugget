@@ -1,3 +1,5 @@
 SFML-2.4.2/
 *.o
 *.out
+sfml-app
+output/

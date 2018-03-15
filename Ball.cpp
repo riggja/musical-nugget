@@ -1,22 +1,31 @@
-#include <SFML/Graphics.hpp>
-#include "../Ball/Ball.h"
-#include <string>
-#include <iostream>
+#include "Ball.h"
 
-Ball::Ball (sf::Vector2f initPos, sf::Vector2f vel, string image) {
+Ball::Ball (sf::Vector2f initPos, sf::Vector2f initVel, std::string image) {
   // Set the initial position of the ball
-  ballSprite.setPosition(initPos);
+  setPosition(initPos);
 
   // Set the initial velocity of the ball
-  this->vel = vel;
+  vel = initVel;
 
-  // Set the texture for the sprite //
-  // Create the texture
-  sf::Texture tex;
   // Try to apply the specified image to the texture
-  if (!tex.loadFromFile(string(image))) {
-      std::cout << "Unable to load specified texture \"" << image << "\"." << endl;
+  if (!tex.loadFromFile(image)) {
+      std::cout << "Unable to load specified texture \"" << image << "\"." << std::endl;
   }
   // Apply the texture to the sprite.
-  ballSprite.setTexture(tex);
+  setTexture(tex);
+}
+
+void Ball::cont(sf::RenderWindow &window) {
+  sf::Vector2f pos = getPosition();
+  if (pos.y <= 0 || pos.y+getGlobalBounds().height >= window.getSize().y) {
+    vel.y *= -1;
+  }
+  if (pos.x <= 0) {
+    vel.x *= -1;
+      //return -1;
+  } else if (pos.x+getGlobalBounds().width >= window.getSize().x) {
+    vel.x *= -1;
+      //return +1;
+  }
+  move(vel);
 }
