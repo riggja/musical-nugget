@@ -12,7 +12,7 @@
 // #include "background.cpp"
 using namespace std;
 
-bool debug = false;
+void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2);
 
 int main()
 {
@@ -28,7 +28,7 @@ int main()
     }
 
     music.setVolume(50);         // reduce the volume
-    
+
 
     music.play();
 
@@ -51,7 +51,7 @@ int main()
     for (int i = 0; i < 675; i++) {
         ostringstream convert;
         convert << setw(5) << setfill('0') << i + 1;
-        if (!textures[i].loadFromFile("resources/images/Background/flying/background"+convert.str()+".jpg")) {
+        if (!textures[i].loadFromFile("resources/images/background/flying/background"+convert.str()+".jpg")) {
             cout << "cannot load background: " << i + 1 << endl;
         }
     }
@@ -61,11 +61,11 @@ int main()
     background.setScale(1,820/720);
 
 
-    Paddle paddle1(sf::Vector2f(10,0), "resources/images/lightsaber_blue.png");
+    Paddle paddle1(sf::Vector2f(10,0), "resources/images/lightsaber/lightsaber_blue.png");
 
-    Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber_red.png");
+    Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber/lightsaber_red.png");
 
-    Ball * ball = new Ball(sf::Vector2f(50,50), sf::Vector2f(3,3), "resources/images/death_star.png");
+    Ball * ball = new Ball(sf::Vector2f(50,50), sf::Vector2f(3,3), "resources/images/death_star/death_star.png");
 
     sf::Clock Clock;
 
@@ -116,31 +116,14 @@ int main()
         window.clear();
 
         if (gameState == 1) {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-                // up key is pressed: move our character
-                paddle1.cont(window, -1);
-                paddle2.cont(window, -1);
-            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-                // down key is pressed: move our character
-                paddle1.cont(window, 1);
-                paddle2.cont(window, 1);
-            } else {
-                paddle1.cont(window, 0);
-                paddle2.cont(window, 0);
-            }
+            checkInput(window, paddle1, paddle2);
 
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
-                // window.clear();
-                if (debug) {
-                    cout << "COLLISION" << endl;
-                }
-            } else {
-                // window.display();
-                if (debug) {
-                    cout << "Not Collision" << endl;
-                }
+                sf::Vector2f vel = ball->getVel();
+                ball->setVel(sf::Vector2f(-vel.x, vel.y));
+            } else if (ball->getGlobalBounds().intersects(paddle2.getGlobalBounds())) {
+                sf::Vector2f vel = ball->getVel();
+                ball->setVel(sf::Vector2f(-vel.x, vel.y));
             }
 
             if(backgroundCounter >= 675) backgroundCounter = 0;
@@ -162,9 +145,9 @@ int main()
                     // Give Player 2 the point
                     initVel = sf::Vector2f(3,3);
                 }
-                new Ball(sf::Vector2f(200,200), initVel, "resources/images/death_star.png");
+                new Ball(sf::Vector2f(200,200), initVel, "resources/images/death_star/death_star.png");
             }
-            
+
 
             window.draw(background);
             window.draw(paddle1);
@@ -181,4 +164,30 @@ int main()
     delete [] textures;
 
     return 0;
+}
+
+
+
+void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2) {
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+  {
+      paddle1.cont(window, -1);
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+  {
+      paddle1.cont(window, 1);
+  } else {
+      paddle1.cont(window, 0);
+  }
+
+  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+  {
+      // up key is pressed: move our character
+      paddle2.cont(window, -1);
+  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+  {
+      // down key is pressed: move our character
+      paddle2.cont(window, 1);
+  } else {
+      paddle2.cont(window, 0);
+  }
 }

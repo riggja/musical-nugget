@@ -9,4 +9,7 @@ class Ball : public sf::Sprite {
   public:
     Ball (sf::Vector2f initPos, sf::Vector2f initVel, std::string image);
     char cont(sf::RenderWindow &window);
+    
+    sf::Vector2f getVel();
+    void setVel(sf::Vector2f vel);
 };

@@ -32,3 +32,11 @@ char Ball::cont(sf::RenderWindow &window) {
   move(vel);
   return 0;
 }
+
+sf::Vector2f Ball::getVel() {
+  return vel;
+}
+
+void Ball::setVel(sf::Vector2f vel) {
+  this->vel = vel;
+}
