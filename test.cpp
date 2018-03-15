@@ -47,7 +47,7 @@ int main()
     // background file loading
     sf::Texture backgroundTexture1;
     sf::Texture * textures = new sf::Texture[675];
-    string address, num;
+    sf::Texture * deadStarTextures = new sf::Texture[11];
     for (int i = 0; i < 675; i++) {
         ostringstream convert;
         convert << setw(5) << setfill('0') << i + 1;
@@ -55,21 +55,28 @@ int main()
             cout << "cannot load background: " << i + 1 << endl;
         }
     }
+    for (int i = 0; i <= 10; i++) {
+        ostringstream convert;
+        convert << setw(2) << setfill('0') << i;
+        if (!deadStarTextures[i].loadFromFile("resources/images/death_star/death"+convert.str()+".png")) {
+            cout << "cannot load background: " << i << endl;
+        }
+    }
 
     sf::Sprite background;
     background.setTexture(textures[0]);
     background.setScale(1,820/720);
 
-
     Paddle paddle1(sf::Vector2f(10,0), "resources/images/lightsaber/lightsaber_blue.png");
 
     Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber/lightsaber_red.png");
 
-    Ball * ball = new Ball(sf::Vector2f(50,50), sf::Vector2f(3,3), "resources/images/death_star/death_star.png");
+    Ball * ball = new Ball(sf::Vector2f(50,500), sf::Vector2f(-3,3), "resources/images/death_star/death_star.png");
 
     sf::Clock Clock;
 
     short backgroundCounter = 0;
+    short deadStarCounter = 0;
 
     while (window.isOpen())
     {
@@ -127,25 +134,28 @@ int main()
             }
 
             if(backgroundCounter >= 675) backgroundCounter = 0;
-            background.setTexture(textures[backgroundCounter]);
-            backgroundCounter++;
+            background.setTexture(textures[backgroundCounter++]);
 
             char ballResult = ball->cont(window);
             if (ballResult) {
                 // Animation and deletion
-
-                delete ball;
-
-                sf::Vector2f initVel;
-
-                if (ballResult == 1) {
-                    // Give Player 1 the point
-                    initVel = sf::Vector2f(-3,-3);
+                if (deadStarCounter <= 10) {
+                  ball->setTexture(deadStarTextures[deadStarCounter++]);
                 } else {
-                    // Give Player 2 the point
-                    initVel = sf::Vector2f(3,3);
+                  delete ball;
+
+                  sf::Vector2f initVel;
+
+                  if (ballResult == 1) {
+                      // Give Player 1 the point
+                      initVel = sf::Vector2f(-3,-3);
+                  } else {
+                      // Give Player 2 the point
+                      initVel = sf::Vector2f(3,3);
+                  }
+                  ball = new Ball(sf::Vector2f(200,200), initVel, "resources/images/death_star/death_star.png");
+                  deadStarCounter = 0;
                 }
-                new Ball(sf::Vector2f(200,200), initVel, "resources/images/death_star/death_star.png");
             }
 
 
@@ -162,6 +172,7 @@ int main()
     }
 
     delete [] textures;
+    delete [] deadStarTextures;
 
     return 0;
 }
