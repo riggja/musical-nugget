@@ -65,7 +65,7 @@ int main()
 
     Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber_red.png");
 
-    Ball ball(sf::Vector2f(50,50), sf::Vector2f(3,3), "resources/images/death_star.png");
+    Ball * ball = new Ball(sf::Vector2f(50,50), sf::Vector2f(3,3), "resources/images/death_star.png");
 
     sf::Clock Clock;
 
@@ -130,7 +130,7 @@ int main()
                 paddle2.cont(window, 0);
             }
 
-            if (ball.getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
+            if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
                 // window.clear();
                 if (debug) {
                     cout << "COLLISION" << endl;
@@ -146,12 +146,29 @@ int main()
             background.setTexture(textures[backgroundCounter]);
             backgroundCounter++;
 
-            ball.cont(window);
+            char ballResult = ball->cont(window);
+            if (ballResult) {
+                // Animation and deletion
+
+                delete ball;
+
+                sf::Vector2f initVel;
+
+                if (ballResult == 1) {
+                    // Give Player 1 the point
+                    initVel = sf::Vector2f(-3,-3);
+                } else {
+                    // Give Player 2 the point
+                    initVel = sf::Vector2f(3,3);
+                }
+                new Ball(sf::Vector2f(200,200), initVel, "resources/images/death_star.png");
+            }
+            
 
             window.draw(background);
             window.draw(paddle1);
             window.draw(paddle2);
-            window.draw(ball);
+            window.draw(*ball);
         }
 
         if (gameState == 0) {

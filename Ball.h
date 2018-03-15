@@ -7,6 +7,6 @@ class Ball : public sf::Sprite {
     sf::Texture tex;
     sf::Vector2f vel;
   public:
-    Ball (sf::Vector2f initPos, sf::Vector2f vel, std::string image);
-    void cont(sf::RenderWindow &window);
+    Ball (sf::Vector2f initPos, sf::Vector2f initVel, std::string image);
+    char cont(sf::RenderWindow &window);
 };
