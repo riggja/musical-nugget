@@ -2,6 +2,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Audio.hpp>
 #include <iostream>
+#include <string>
+#include <stdio.h>
+#include <stdlib.h>
+#include <sstream>
 #include "menu.cpp"
 // #include "background.cpp"
 using namespace std;
@@ -28,31 +32,41 @@ int main()
     
     // Background t(2); // testing from background.h -> will later implement
     
-    // background file loading
-    sf::Texture backgroundTexture1;
-    if (!backgroundTexture1.loadFromFile("resources/images/Background1.jpg")) {
-        cout << "cannot load background" << endl;
-    }
-    sf::Texture backgroundTexture2;
-    if (!backgroundTexture2.loadFromFile("resources/images/Background2.jpg")) {
-        cout << "cannot load background" << endl;
-    }
-    sf::Sprite background;
-    background.setTexture(backgroundTexture1);
-    
     // configuring display window
     int resX = 1280, resY = 820;
     int newH = (1920*resY)/resX;
     int displace = (newH - 1080)/(-2);
     sf::RenderWindow window(sf::VideoMode(resX, resY), "SFML works!");
     window.setFramerateLimit(30);
-    window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
+    // window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
     
     Menu menu(window.getSize().x, window.getSize().y);
     
+    // background file loading
+    sf::Texture backgroundTexture1;
+    sf::Texture * textures = new sf::Texture[20];
+    string address, num;
+    for (int i = 0; i < 20; i++) {
+        ostringstream convert;
+        convert << i + 1;
+        num = convert.str();
+        if (i + 1 < 10) {
+            address = string("resources/images/Background/MovingStars/Moving Stars Clean Royalty Free Backgorund Video Effect Footage AA VFX 0") + num + ".jpg";
+        } else {
+            address = string("resources/images/Background/MovingStars/Moving Stars Clean Royalty Free Backgorund Video Effect Footage AA VFX ") + num + ".jpg";
+        }
+        if (!textures[i].loadFromFile(address)) {
+            cout << "cannot load background: " << i << endl;
+        }
+    }
+    
+    sf::Sprite background;
+    background.setTexture(textures[0]);
+    background.setScale(1,820/720);
+    
     // game item files loading
     sf::Texture paddleTexture;
-    if (!paddleTexture.loadFromFile(string("resources/images/Blue_Lightsaber2.png"))) {
+    if (!paddleTexture.loadFromFile(string("resources/images/BlueLightsaber2.png"))) {
         cout << "mistake" << endl;
     }
     sf::Texture ballTexture;
@@ -145,11 +159,13 @@ int main()
             }
             ball.move(direction,0);
             
-            if (int(Clock.getElapsedTime().asSeconds()) % 2 == 0) {
-                background.setTexture(backgroundTexture2);
-            } else {
-                background.setTexture(backgroundTexture1);
-            } 
+            for (int i = 0; i < 20; i++) {
+                if (i == 0) {
+                    background.setTexture(textures[0]);
+                } else if (int(Clock.getElapsedTime().asSeconds()) % i == 0) {
+                    background.setTexture(textures[i]);
+                } 
+            }
                 
             window.draw(background);
             window.draw(paddle);
