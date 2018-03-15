@@ -8,6 +8,7 @@
 #include <sstream>
 #include "menu.h"
 #include "Ball.h"
+#include "Paddle.h"
 // #include "background.cpp"
 using namespace std;
 
@@ -60,20 +61,16 @@ int main()
     background.setScale(1,820/720);
 
 
-    // game item files loading
-    sf::Texture paddleTexture;
-    if (!paddleTexture.loadFromFile(string("resources/images/BlueLightsaber2.png"))) {
-        cout << "mistake" << endl;
-    }
+    Paddle paddle1(sf::Vector2f(10,0), "resources/images/lightsaber_blue.png");
 
-    sf::Sprite paddle;
-    paddle.setTexture(paddleTexture);
+    Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber_red.png");
 
     Ball ball(sf::Vector2f(50,50), sf::Vector2f(3,3), "resources/images/death_star.png");
 
     sf::Clock Clock;
-    int direction = 1;
+
     short backgroundCounter = 0;
+
     while (window.isOpen())
     {
         sf::Event event;
@@ -121,16 +118,19 @@ int main()
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
             {
                 // up key is pressed: move our character
-                paddle.move(0, -1);
-            }
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+                paddle1.cont(window, -1);
+                paddle2.cont(window, -1);
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
             {
                 // down key is pressed: move our character
-                paddle.move(0, 1);
+                paddle1.cont(window, 1);
+                paddle2.cont(window, 1);
+            } else {
+                paddle1.cont(window, 0);
+                paddle2.cont(window, 0);
             }
 
-            if (ball.getGlobalBounds().intersects(paddle.getGlobalBounds())) {
+            if (ball.getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
                 // window.clear();
                 if (debug) {
                     cout << "COLLISION" << endl;
@@ -149,7 +149,8 @@ int main()
             ball.cont(window);
 
             window.draw(background);
-            window.draw(paddle);
+            window.draw(paddle1);
+            window.draw(paddle2);
             window.draw(ball);
         }
 
@@ -158,6 +159,8 @@ int main()
         }
         window.display();
     }
+
+    delete [] textures;
 
     return 0;
 }
