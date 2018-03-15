@@ -28,7 +28,7 @@ int main()
     }
 
     music.setVolume(50);         // reduce the volume
-    music.setLoop(true);        // set loop
+    
 
     music.play();
 
@@ -98,6 +98,7 @@ int main()
                                     case 0:
                                         gameState = 1;
                                         std::cout << "Play button has been pressed" << std::endl;
+                                        music.stop();
                                         break;
                                     case 1:
                                         gameState = 2;
