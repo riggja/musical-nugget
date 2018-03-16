@@ -19,7 +19,7 @@ using namespace std;
 float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2);
 
 // Handles input
-void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2);
+void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2, Ball &ball);
 
 
 // Selects and plays one of two background songs
@@ -174,7 +174,7 @@ int main()
 
         if (gameState == 1) {
 
-            checkInput(window, paddle1, paddle2);
+            checkInput(window, paddle1, paddle2, *ball);
 
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
                 ball->setVelAngle(getSpriteDistance(paddle1, *ball)*ball->maxAngle);
@@ -249,27 +249,54 @@ int main()
 
 
 
-void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2) {
+void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2, Ball &ball) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
+        paddle1.setIsAI(false);
         paddle1.cont(window, -1);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
+        paddle1.setIsAI(false);
         paddle1.cont(window, 1);
     } else {
-        paddle1.cont(window, 0);
+        if(paddle1.getIsAI()) {
+            float dir = getSpriteDistance(paddle1, ball);
+            if(dir > 0) {
+                paddle1.cont(window, -1);
+            } else if (!dir) {
+                paddle1.cont(window, 0);
+            } else {
+                paddle1.cont(window, 1);
+            }
+        } else {
+            paddle1.cont(window, 0);
+        }
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
         // up key is pressed: move our character
+        paddle2.setIsAI(false);
         paddle2.cont(window, -1);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
         // down key is pressed: move our character
+        paddle2.setIsAI(false);
         paddle2.cont(window, 1);
     } else {
-        paddle2.cont(window, 0);
+        if(paddle2.getIsAI()) {
+            float dir = getSpriteDistance(paddle2, ball);
+            if(dir > 0) {
+                paddle2.cont(window, -1);
+            } else if (!dir) {
+                paddle2.cont(window, 0);
+            } else {
+                paddle2.cont(window, 1);
+            }
+        } else {
+            paddle2.cont(window, 0);
+        }
+
     }
 }
 
