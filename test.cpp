@@ -24,7 +24,7 @@ int main()
 
     //Random number to decide song/sound
     srand(time(NULL));
-    int num = rand();
+    int num = rand() % 100 + 1;
 
     // gameState is 0 if menu, 1 if game is playing, 2 if configuring options
     int gameState = 0;
@@ -251,4 +251,45 @@ void chooseSong(int x){
 
         music2.play();
     }
+}
+
+void chooseSound(int x){
+    if(x<=20){
+        sf::SoundBuffer buffer;
+        buffer.loadFromFile("Saber.wav");
+        sf::Sound sound;
+        sound.setBuffer(buffer);
+        sound.play();
+        
+    }else if(x>20 && x<=40){
+        sf::SoundBuffer buffer1;
+        buffer1.loadFromFile("Saber1.wav");
+        sf::Sound sound1;
+        sound1.setBuffer(buffer1);
+        sound1.play();
+    
+    }else if(x>40 && x<=60){
+        sf::SoundBuffer buffer2;
+        buffer2.loadFromFile("Saber2.wav");
+        sf::Sound sound2;
+        sound2.setBuffer(buffer2);
+        sound2.play();
+        
+    }else if(x>60 && x<=80){
+        sf::SoundBuffer buffer3;
+        buffer3.loadFromFile("Saber3.wav");
+        sf::Sound sound3;
+        sound3.setBuffer(buffer3);
+        sound3.play();
+        
+    }else if(x>80){
+        sf::SoundBuffer buffer4;
+        buffer4.loadFromFile("Saber4.wav");
+        sf::Sound sound4;
+        sound4.setBuffer(buffer4);
+        sound4.play();
+    }
+    
+    
+    
 }
