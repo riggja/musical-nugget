@@ -3,7 +3,7 @@ using namespace std;
 
 void Scoreboard::score(int player) {
   ostringstream convert;
-  if (player == -1) {
+  if (player == 1) {
     playerOneScore++;
     convert << playerOneScore;
     scoreOne.setString(convert.str());
@@ -16,9 +16,9 @@ void Scoreboard::score(int player) {
 
 char Scoreboard::hasWon(int maxScore) {
   if (playerOneScore >= maxScore) {
-    return -1;
-  } else if (playerTwoScore >= maxScore) {
     return 1;
+  } else if (playerTwoScore >= maxScore) {
+    return -1;
   } else {
     return 0;
   }
@@ -39,4 +39,11 @@ void Scoreboard::draw(sf::RenderWindow &window) {
     scoreTwo.setPosition(window.getSize().x-100, window.getSize().y-50);
     window.draw(scoreOne);
     window.draw(scoreTwo);
+}
+
+void Scoreboard::reset() {
+    playerOneScore = 0;
+    scoreOne.setString("0");
+    playerTwoScore = 0;
+    scoreTwo.setString("0");
 }

@@ -154,26 +154,24 @@ int main()
                     case sf::Event::KeyReleased:
                     switch (event.key.code) {
                         case sf::Keyboard::Up:
-                            std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
                             menu.MoveUp();
                             break;
 
                         case sf::Keyboard::Down:
                             menu.MoveDown();
-                            std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
                             break;
 
                         case sf::Keyboard::Return:
                         switch (menu.GetPressedItem()) {
                             case 0:
                                 gameState = 1;
-                                std::cout << "Play button has been pressed" << std::endl;
                                 music.stop();
                                 chooseSong(rand() % 2);
                                 break;
                             case 1:
                             // Exits game
                             window.close();
+
                             break;
                         }
                     }

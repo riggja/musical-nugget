@@ -32,6 +32,7 @@ char Ball::cont(sf::RenderWindow &window) {
         vel = sf::Vector2f(0,0);
         return 1;
     }
+
     move(vel);
     return 0;
 }
@@ -50,6 +51,10 @@ void Ball::setVelAngle(float angle) {
 
 void Ball::reverseDir() {
     vel.x *= -1;
+}
+
+float Ball::getSpeed() {
+    return speed;
 }
 
 float Ball::increaseSpeed() {

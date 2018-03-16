@@ -22,6 +22,8 @@ class Ball : public sf::Sprite {
 
         void reverseDir();
 
+        float getSpeed();
+
         // Increases the speed by 0.1 and returns it.
         float increaseSpeed();
 };
