@@ -160,9 +160,11 @@ int main()
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
                 sf::Vector2f vel = ball->getVel();
                 ball->setVel(sf::Vector2f(-vel.x, vel.y));
+                chooseSound(num);
             } else if (ball->getGlobalBounds().intersects(paddle2.getGlobalBounds())) {
                 sf::Vector2f vel = ball->getVel();
                 ball->setVel(sf::Vector2f(-vel.x, vel.y));
+                chooseSound(num);
             }
             //
             // if(backgroundCounter >= 675) backgroundCounter = 0;
@@ -251,7 +253,7 @@ void chooseSong(int x){
 
         music1.play();
 
-    }
+    }else{
 
         sf::Music music2;
         music2.openFromFile("resources/audio/March.wav");
@@ -263,6 +265,7 @@ void chooseSong(int x){
         music2.setVolume(50);         // reduce the volume
 
         music2.play();
+    }
 
 }
 
