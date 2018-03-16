@@ -21,7 +21,6 @@ void chooseSound(int);
 
 int main()
 {
-
     //Random number to decide song/sound
     srand(time(NULL));
     int num = rand() % 100 + 1;
@@ -54,6 +53,16 @@ int main()
 
     Menu menu(window.getSize().x, window.getSize().y);
 
+    sf::Texture loadingTexture;
+    if (!loadingTexture.loadFromFile("resources/images/menu/loading.png")) {
+      cout << "cannot load loading image" << endl;
+    }
+    sf::Sprite background;
+    background.setTexture(loadingTexture);
+    background.setScale(.9,1);
+    window.draw(background);
+    window.display();
+
     // background file loading
     sf::Texture logo;
     if (!logo.loadFromFile("resources/images/menu/logo.png")) {
@@ -79,7 +88,6 @@ int main()
             cout << "cannot load background: " << i + 1 << endl;
         }
     }
-    sf::Sprite background;
     background.setTexture(textures[0]);
     background.setScale(1,820/720);
 
@@ -96,6 +104,11 @@ int main()
 
     while (window.isOpen())
     {
+
+        if(backgroundCounter >= 675) backgroundCounter = 0;
+        background.setTexture(textures[backgroundCounter]);
+        backgroundCounter++;
+        
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -151,11 +164,10 @@ int main()
                 sf::Vector2f vel = ball->getVel();
                 ball->setVel(sf::Vector2f(-vel.x, vel.y));
             }
-
-            if(backgroundCounter >= 675) backgroundCounter = 0;
-            background.setTexture(textures[backgroundCounter]);
-            backgroundCounter++;
-
+            //
+            // if(backgroundCounter >= 675) backgroundCounter = 0;
+            // background.setTexture(textures[backgroundCounter]);
+            // backgroundCounter++;
 
             char ballResult = ball->cont(window);
             if (ballResult) {
@@ -187,6 +199,7 @@ int main()
         }
 
         if (gameState == 0) {
+            window.draw(background);
             window.draw(starWars);
             menu.draw(window);
         }
