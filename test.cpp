@@ -7,10 +7,12 @@
 #include <stdlib.h>
 #include <ctime>
 #include <sstream>
+#include <math.h>
 #include "menu.h"
 #include "Ball.h"
 #include "Paddle.h"
-// #include "background.cpp"
+
+
 using namespace std;
 
 // Gets the distance between two sprites
@@ -19,33 +21,39 @@ float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2);
 // Handles input
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2);
 
-void chooseSong(int);
 
-void chooseSound(int);
+// Selects and plays one of two background songs
+void chooseSong(bool);
+// The global music player
+sf::Music music;
+
+
+// Plays one of four lightsaber sound effects
+void playLsSound(unsigned int);
+// The lightsaber sounud buffer
+sf::SoundBuffer lsSoundBuffer;
+sf::Sound lsSound;
+
+
+// Plays one of two "Nooo" sounds
+void playNoSound(bool);
+// The lightsaber sounud buffer
+sf::SoundBuffer noSoundBuffer;
+sf::Sound noSound;
+
+
+
 
 int main()
 {
+    lsSound.setBuffer(lsSoundBuffer);
+    noSound.setBuffer(noSoundBuffer);
+
     //Random number to decide song/sound
     srand(time(NULL));
-    int num = rand() % 100 + 1;
 
     // gameState is 0 if menu, 1 if game is playing, 2 if configuring options
     int gameState = 0;
-
-    //testing sound
-    sf::Music music;
-    music.openFromFile("resources/audio/StarWarsSong.ogg");
-    if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
-    {
-        cout << "cannot load song" << endl;
-    }
-
-    music.setVolume(50);         // reduce the volume
-
-
-    music.play();
-
-    // Background t(2); // testing from background.h -> will later implement
 
     // configuring display window
     int resX = 1280, resY = 720;
@@ -66,6 +74,7 @@ int main()
     background.setScale(.9,1);
     window.draw(background);
     window.display();
+
 
     // background file loading
     sf::Texture logo;
@@ -94,6 +103,15 @@ int main()
     }
     background.setTexture(textures[0]);
     background.setScale(1,820/720);
+
+    music.openFromFile("resources/audio/StarWarsSong.ogg");
+    if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
+    {
+        cout << "cannot load song" << endl;
+    }
+
+    music.setVolume(50);         // reduce the volume
+    music.play();
 
     Paddle paddle1(sf::Vector2f(10,0), "resources/images/lightsaber/lightsaber_blue.png");
 
@@ -140,7 +158,7 @@ int main()
                             gameState = 1;
                             std::cout << "Play button has been pressed" << std::endl;
                             music.stop();
-                            chooseSong(num);
+                            chooseSong(rand() % 2);
                             break;
                             case 1:
                             gameState = 2;
@@ -162,22 +180,25 @@ int main()
             checkInput(window, paddle1, paddle2);
 
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
-                ball->setVelAngle(getSpriteDistance(paddle1, *ball)*(*ball).maxAngle);
+                ball->setVelAngle(getSpriteDistance(paddle1, *ball)*ball->maxAngle);
 
-                chooseSound(num);
+                playLsSound(rand() % 5);
+
             } else if (ball->getGlobalBounds().intersects(paddle2.getGlobalBounds())) {
                 sf::Vector2f vel = ball->getVel();
-                ball->setVel(sf::Vector2f(-vel.x, vel.y));
-                chooseSound(num);
+                ball->setVelAngle(getSpriteDistance(paddle1, *ball)*-(ball->maxAngle));
+
+                playLsSound(rand() % 5);
             }
-            //
-            // if(backgroundCounter >= 675) backgroundCounter = 0;
-            // background.setTexture(textures[backgroundCounter]);
-            // backgroundCounter++;
 
             char ballResult = ball->cont(window);
             if (ballResult) {
                 // Animation and deletion
+                if (!deadStarCounter) {
+                    // Play the explosion sound effect; we'll just borrow the lightsaber buffer, since it won't play at the same time.
+                    lsSoundBuffer.loadFromFile("resources/audio/explosion.wav");
+                    lsSound.play();
+                }
                 if (deadStarCounter <= 10) {
                     ball->setTexture(deadStarTextures[deadStarCounter++]);
                 } else {
@@ -188,11 +209,17 @@ int main()
                     if (ballResult == 1) {
                         // Give Player 1 the point
                         initVel = sf::Vector2f(-3,-3);
+
+                        playNoSound(0);
+
                     } else {
                         // Give Player 2 the point
                         initVel = sf::Vector2f(3,3);
+
+                        playNoSound(1);
+
                     }
-                    ball = new Ball(sf::Vector2f(50,500), 5, 0, "resources/images/death_star/death_star.png");
+                    ball = new Ball(sf::Vector2f(500,500), 5, M_PI, "resources/images/death_star/death_star.png");
                     deadStarCounter = 0;
                 }
             }
@@ -218,6 +245,8 @@ int main()
     return 0;
 }
 
+
+
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
@@ -242,6 +271,8 @@ void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2) {
     }
 }
 
+
+
 float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2) {
     float center1 = sprt1.getPosition().y + ((sprt1.getGlobalBounds().height)/2);
     float center2 = sprt2.getPosition().y + ((sprt2.getGlobalBounds().height)/2);
@@ -249,73 +280,67 @@ float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2) {
 }
 
 
-void chooseSong(int x){
 
-    if(x%2==0){
-        sf::Music music1;
-        music1.openFromFile("resources/audio/Fate.ogg");
-        if (!music1.openFromFile("resources/audio/Fate.ogg"))
+void chooseSong(bool sel){
+
+    if(sel){
+        if (!music.openFromFile("resources/audio/Fate.ogg"))
         {
             cout << "cannot load song" << endl;
         }
 
-        music1.setVolume(50);         // reduce the volume
+        music.setVolume(50);         // reduce the volume
 
-        music1.play();
+        music.play();
 
     }else{
-
-        sf::Music music2;
-        music2.openFromFile("resources/audio/March.wav");
-        if (!music2.openFromFile("resources/audio/March.wav"))
+        if (!music.openFromFile("resources/audio/March.wav"))
         {
             cout << "cannot load song" << endl;
         }
 
-        music2.setVolume(50);         // reduce the volume
+        music.setVolume(50);         // reduce the volume
 
-        music2.play();
+        music.play();
     }
 
 }
 
-void chooseSound(int x){
-    if(x<=20){
-        sf::SoundBuffer buffer;
-        buffer.loadFromFile("resources/audio/Saber.wav");
-        sf::Sound sound;
-        sound.setBuffer(buffer);
-        sound.play();
+void playLsSound (unsigned int sel) {
 
-    }else if(x>20 && x<=40){
-        sf::SoundBuffer buffer1;
-        buffer1.loadFromFile("resources/audio/Saber1.wav");
-        sf::Sound sound1;
-        sound1.setBuffer(buffer1);
-        sound1.play();
+    switch (sel) {
+        case 0:
+            lsSoundBuffer.loadFromFile("resources/audio/saber0.wav");
+            lsSound.play();
 
-    }else if(x>40 && x<=60){
-        sf::SoundBuffer buffer2;
-        buffer2.loadFromFile("resources/audio/Saber2.wav");
-        sf::Sound sound2;
-        sound2.setBuffer(buffer2);
-        sound2.play();
+            break;
 
-    }else if(x>60 && x<=80){
-        sf::SoundBuffer buffer3;
-        buffer3.loadFromFile("resources/audio/Saber3.wav");
-        sf::Sound sound3;
-        sound3.setBuffer(buffer3);
-        sound3.play();
+        case 1:
+            lsSoundBuffer.loadFromFile("resources/audio/saber1.wav");
+            lsSound.play();
 
-    }else if(x>80){
-        sf::SoundBuffer buffer4;
-        buffer4.loadFromFile("resources/audio/Saber4.wav");
-        sf::Sound sound4;
-        sound4.setBuffer(buffer4);
-        sound4.play();
+            break;
+
+        case 2:
+            lsSoundBuffer.loadFromFile("resources/audio/saber2.wav");
+            lsSound.play();
+
+            break;
+
+        default:
+            lsSoundBuffer.loadFromFile("resources/audio/saber3.wav");
+            lsSound.play();
+
+            break;
     }
+}
 
-
-
+void playNoSound (bool sel) {
+    if (sel) {
+        noSoundBuffer.loadFromFile("resources/audio/no_luke.wav");
+        noSound.play();
+    } else {
+        noSoundBuffer.loadFromFile("resources/audio/no_vader.wav");
+        noSound.play();
+    }
 }

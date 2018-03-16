@@ -18,5 +18,5 @@ class Ball : public sf::Sprite {
         sf::Vector2f getVel();
         void setVel(sf::Vector2f vel);
 
-        void setVelAngle(float angle);
+        void setVelAngle(float);
 };
