@@ -13,6 +13,10 @@
 // #include "background.cpp"
 using namespace std;
 
+// Gets the distance between two sprites
+float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2);
+
+// Handles input
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2);
 
 void chooseSong(int);
@@ -81,7 +85,7 @@ int main()
 
     Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber/lightsaber_red.png");
 
-    Ball * ball = new Ball(sf::Vector2f(50,500), sf::Vector2f(-3,3), "resources/images/death_star/death_star.png");
+    Ball * ball = new Ball(sf::Vector2f(50,500), 5, 0, "resources/images/death_star/death_star.png");
 
     sf::Clock Clock;
 
@@ -94,39 +98,39 @@ int main()
         while (window.pollEvent(event))
         {
             if (event.type == sf::Event::Closed)
-                window.close();
+            window.close();
 
             if (gameState == 0) {
                 switch(event.type) {
                     case sf::Event::KeyReleased:
-                        switch (event.key.code) {
-                            case sf::Keyboard::Up:
-                                std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
-                                menu.MoveUp();
-                                break;
+                    switch (event.key.code) {
+                        case sf::Keyboard::Up:
+                        std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
+                        menu.MoveUp();
+                        break;
 
-                            case sf::Keyboard::Down:
-                                menu.MoveDown();
-                                std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
-                                break;
+                        case sf::Keyboard::Down:
+                        menu.MoveDown();
+                        std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
+                        break;
 
-                            case sf::Keyboard::Return:
-                                switch (menu.GetPressedItem()) {
-                                    case 0:
-                                        gameState = 1;
-                                        std::cout << "Play button has been pressed" << std::endl;
-                                        music.stop();
-                                        chooseSong(num);
-                                        break;
-                                    case 1:
-                                        gameState = 2;
-                                        std::cout << "Option button has been pressed" << std::endl;
-                                        break;
-                                    case 2:
-                                        window.close();
-                                        break;
-                                }
+                        case sf::Keyboard::Return:
+                        switch (menu.GetPressedItem()) {
+                            case 0:
+                            gameState = 1;
+                            std::cout << "Play button has been pressed" << std::endl;
+                            music.stop();
+                            chooseSong(num);
+                            break;
+                            case 1:
+                            gameState = 2;
+                            std::cout << "Option button has been pressed" << std::endl;
+                            break;
+                            case 2:
+                            window.close();
+                            break;
                         }
+                    }
                 }
             }
         }
@@ -137,8 +141,7 @@ int main()
             checkInput(window, paddle1, paddle2);
 
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
-                sf::Vector2f vel = ball->getVel();
-                ball->setVel(sf::Vector2f(-vel.x, vel.y));
+                ball->setVelAngle(getSpriteDistance(paddle1, *ball)*(*ball).maxAngle);
             } else if (ball->getGlobalBounds().intersects(paddle2.getGlobalBounds())) {
                 sf::Vector2f vel = ball->getVel();
                 ball->setVel(sf::Vector2f(-vel.x, vel.y));
@@ -153,21 +156,21 @@ int main()
             if (ballResult) {
                 // Animation and deletion
                 if (deadStarCounter <= 10) {
-                  ball->setTexture(deadStarTextures[deadStarCounter++]);
+                    ball->setTexture(deadStarTextures[deadStarCounter++]);
                 } else {
-                  delete ball;
+                    delete ball;
 
-                  sf::Vector2f initVel;
+                    sf::Vector2f initVel;
 
-                  if (ballResult == 1) {
-                      // Give Player 1 the point
-                      initVel = sf::Vector2f(-3,-3);
-                  } else {
-                      // Give Player 2 the point
-                      initVel = sf::Vector2f(3,3);
-                  }
-                  ball = new Ball(sf::Vector2f(200,200), initVel, "resources/images/death_star/death_star.png");
-                  deadStarCounter = 0;
+                    if (ballResult == 1) {
+                        // Give Player 1 the point
+                        initVel = sf::Vector2f(-3,-3);
+                    } else {
+                        // Give Player 2 the point
+                        initVel = sf::Vector2f(3,3);
+                    }
+                    ball = new Ball(sf::Vector2f(50,500), 5, 0, "resources/images/death_star/death_star.png");
+                    deadStarCounter = 0;
                 }
             }
 
@@ -191,27 +194,33 @@ int main()
 }
 
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2) {
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
-  {
-      paddle1.cont(window, -1);
-  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-  {
-      paddle1.cont(window, 1);
-  } else {
-      paddle1.cont(window, 0);
-  }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+    {
+        paddle1.cont(window, -1);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+    {
+        paddle1.cont(window, 1);
+    } else {
+        paddle1.cont(window, 0);
+    }
 
-  if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-  {
-      // up key is pressed: move our character
-      paddle2.cont(window, -1);
-  } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-  {
-      // down key is pressed: move our character
-      paddle2.cont(window, 1);
-  } else {
-      paddle2.cont(window, 0);
-  }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+    {
+        // up key is pressed: move our character
+        paddle2.cont(window, -1);
+    } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+    {
+        // down key is pressed: move our character
+        paddle2.cont(window, 1);
+    } else {
+        paddle2.cont(window, 0);
+    }
+}
+
+float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2) {
+    float center1 = sprt1.getPosition().y + ((sprt1.getGlobalBounds().height)/2);
+    float center2 = sprt2.getPosition().y + ((sprt2.getGlobalBounds().height)/2);
+    float distance = ((center1 - center2)/((sprt1.getGlobalBounds().height)/2));
 }
 
 
