@@ -19,4 +19,9 @@ class Ball : public sf::Sprite {
         void setVel(sf::Vector2f vel);
 
         void setVelAngle(float);
+
+        void reverseDir();
+
+        // Increases the speed by 0.1 and returns it.
+        float increaseSpeed();
 };

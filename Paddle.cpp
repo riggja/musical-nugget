@@ -1,7 +1,9 @@
 #include "Paddle.h"
 
 
-Paddle::Paddle (sf::Vector2f initPos, std::string image) : maxSpeed(5) {
+Paddle::Paddle (sf::Vector2f initPos, std::string image) {
+    maxSpeed = 5;
+
     speed = 0;
     // Set the initial position of the paddle
     setPosition(initPos);
@@ -43,4 +45,12 @@ void Paddle::cont(sf::RenderWindow &window, char dir) {
         }
     }
     move (0, speed);
+}
+
+int Paddle::getMaxSpeed() {
+    return maxSpeed;
+}
+
+void Paddle::setMaxSpeed(int ms) {
+    maxSpeed = ms;
 }

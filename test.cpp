@@ -182,11 +182,15 @@ int main()
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
                 ball->setVelAngle(getSpriteDistance(paddle1, *ball)*ball->maxAngle);
 
+                paddle2.setMaxSpeed(ball->increaseSpeed());
+
                 playLsSound(rand() % 5);
 
             } else if (ball->getGlobalBounds().intersects(paddle2.getGlobalBounds())) {
-                sf::Vector2f vel = ball->getVel();
-                ball->setVelAngle(getSpriteDistance(paddle1, *ball)*-(ball->maxAngle));
+                ball->setVelAngle(getSpriteDistance(paddle2, *ball)*ball->maxAngle);
+                ball->reverseDir();
+
+                paddle1.setMaxSpeed(ball->increaseSpeed());
 
                 playLsSound(rand() % 5);
             }
@@ -219,6 +223,7 @@ int main()
                         playNoSound(1);
 
                     }
+
                     ball = new Ball(sf::Vector2f(500,500), 5, M_PI, "resources/images/death_star/death_star.png");
                     deadStarCounter = 0;
                 }

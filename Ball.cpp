@@ -1,7 +1,7 @@
 #include "Ball.h"
 #include <math.h>
 
-Ball::Ball (sf::Vector2f initPos, float initSpeed, float initAngle, std::string image) : maxAngle(5*M_PI/12) {
+Ball::Ball (sf::Vector2f initPos, float initSpeed, float initAngle, std::string image) : maxAngle(M_PI/4) {
     // Set the initial position of the ball
     setPosition(initPos);
 
@@ -46,4 +46,12 @@ void Ball::setVel(sf::Vector2f vel) {
 
 void Ball::setVelAngle(float angle) {
     vel = sf::Vector2f((speed*cos(angle)),(speed*-sin(angle)));
+}
+
+void Ball::reverseDir() {
+    vel.x *= -1;
+}
+
+float Ball::increaseSpeed() {
+    return speed+=0.1;
 }
