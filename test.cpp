@@ -143,30 +143,27 @@ int main()
                     case sf::Event::KeyReleased:
                     switch (event.key.code) {
                         case sf::Keyboard::Up:
-                        std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
-                        menu.MoveUp();
-                        break;
+                            std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
+                            menu.MoveUp();
+                            break;
 
                         case sf::Keyboard::Down:
-                        menu.MoveDown();
-                        std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
-                        break;
+                            menu.MoveDown();
+                            std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
+                            break;
 
                         case sf::Keyboard::Return:
                         switch (menu.GetPressedItem()) {
                             case 0:
-                            gameState = 1;
-                            std::cout << "Play button has been pressed" << std::endl;
-                            music.stop();
-                            chooseSong(rand() % 2);
-                            break;
+                                gameState = 1;
+                                std::cout << "Play button has been pressed" << std::endl;
+                                music.stop();
+                                chooseSong(rand() % 2);
+                                break;
                             case 1:
-                            gameState = 2;
-                            std::cout << "Option button has been pressed" << std::endl;
-                            break;
-                            case 2:
-                            window.close();
-                            break;
+                                window.close();
+                                return 0;
+
                         }
                     }
                 }
