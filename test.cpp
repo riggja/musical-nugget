@@ -123,7 +123,7 @@ int main()
                                         gameState = 1;
                                         std::cout << "Play button has been pressed" << std::endl;
                                         music.stop();
-                                        chooseSong(1);
+                                        chooseSong(num);
                                         break;
                                     case 1:
                                         gameState = 2;
@@ -238,7 +238,7 @@ void chooseSong(int x){
 
         music1.play();
 
-    } else {
+    }
 
         sf::Music music2;
         music2.openFromFile("resources/audio/March.wav");
@@ -250,46 +250,46 @@ void chooseSong(int x){
         music2.setVolume(50);         // reduce the volume
 
         music2.play();
-    }
+
 }
 
 void chooseSound(int x){
     if(x<=20){
         sf::SoundBuffer buffer;
-        buffer.loadFromFile("Saber.wav");
+        buffer.loadFromFile("resources/audio/Saber.wav");
         sf::Sound sound;
         sound.setBuffer(buffer);
         sound.play();
-        
+
     }else if(x>20 && x<=40){
         sf::SoundBuffer buffer1;
-        buffer1.loadFromFile("Saber1.wav");
+        buffer1.loadFromFile("resources/audio/Saber1.wav");
         sf::Sound sound1;
         sound1.setBuffer(buffer1);
         sound1.play();
-    
+
     }else if(x>40 && x<=60){
         sf::SoundBuffer buffer2;
-        buffer2.loadFromFile("Saber2.wav");
+        buffer2.loadFromFile("resources/audio/Saber2.wav");
         sf::Sound sound2;
         sound2.setBuffer(buffer2);
         sound2.play();
-        
+
     }else if(x>60 && x<=80){
         sf::SoundBuffer buffer3;
-        buffer3.loadFromFile("Saber3.wav");
+        buffer3.loadFromFile("resources/audio/Saber3.wav");
         sf::Sound sound3;
         sound3.setBuffer(buffer3);
         sound3.play();
-        
+
     }else if(x>80){
         sf::SoundBuffer buffer4;
-        buffer4.loadFromFile("Saber4.wav");
+        buffer4.loadFromFile("resources/audio/Saber4.wav");
         sf::Sound sound4;
         sound4.setBuffer(buffer4);
         sound4.play();
     }
-    
-    
-    
+
+
+
 }
