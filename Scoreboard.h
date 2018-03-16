@@ -1,5 +1,8 @@
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <sstream>
+
+using namespace std;
 
 #ifndef SCOREBOARD_H
 #define SCOREBOARD_H
@@ -11,10 +14,10 @@ private:
   sf::Font scoreFont;
   sf::Text scoreOne, scoreTwo;
 public:
-  Scoreboard(sf::RenderWindow &window);
-  void score(int player);
-  char hasWon(int maxScore);
-  void draw(sf::RenderWindow &window);
+  Scoreboard(sf::RenderWindow &window); // Scoreboard constructor sets both sf::Text variables to 0
+  void score(int player); // score is called when ball hits one edge of screen and updates points
+  char hasWon(int maxScore); // hasWon checks to see if a player has won
+  void draw(sf::RenderWindow &window); // Draw displays both scores
 };
 
 #endif // SCOREBOARD_H

@@ -1,10 +1,16 @@
 #include "Scoreboard.h"
+using namespace std;
 
 void Scoreboard::score(int player) {
+  ostringstream convert;
   if (player == -1) {
     playerOneScore++;
+    convert << playerOneScore;
+    scoreOne.setString(convert.str());
   } else {
     playerTwoScore++;
+    convert << playerTwoScore;
+    scoreTwo.setString(convert.str());
   }
 }
 
@@ -19,21 +25,18 @@ char Scoreboard::hasWon(int maxScore) {
 }
 
 Scoreboard::Scoreboard(sf::RenderWindow &window) : playerOneScore(0), playerTwoScore(0) {
-  this->scoreFont.loadFromFile("resources/fonts/jedi.ttf");
-  sf::Text scoreOne, scoreTwo;
-
-  this->scoreOne.setFont(scoreFont);
-  this->scoreOne.setFillColor(sf::Color::Blue);
-  this->scoreOne.setString("1");
-  this->scoreOne.setPosition(100, window.getSize().y-50);
-
-  this->scoreTwo.setFont(scoreFont);
-  this->scoreTwo.setFillColor(sf::Color::Red);
-  this->scoreTwo.setString("1");
-  this->scoreTwo.setPosition(window.getSize().x-100, window.getSize().y-50);
+  scoreFont.loadFromFile("resources/fonts/jedi.ttf");
+  scoreOne.setString("0");
+  scoreTwo.setString("0");
 }
 
 void Scoreboard::draw(sf::RenderWindow &window) {
+    scoreOne.setFont(scoreFont);
+    scoreOne.setFillColor(sf::Color::Blue);
+    scoreOne.setPosition(100, window.getSize().y-50);
+    scoreTwo.setFont(scoreFont);
+    scoreTwo.setFillColor(sf::Color::Red);
+    scoreTwo.setPosition(window.getSize().x-100, window.getSize().y-50);
     window.draw(scoreOne);
     window.draw(scoreTwo);
 }

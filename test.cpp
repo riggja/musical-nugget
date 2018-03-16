@@ -218,6 +218,7 @@ int main()
 
                     sf::Vector2f initVel;
 
+                    // awards score to scoring player
                     score.score(ballResult);
 
                     if (ballResult == 1) {
@@ -234,7 +235,8 @@ int main()
 
                     }
 
-                    if (score.hasWon(1)) {
+                    // return to menu upon one player winning
+                    if (score.hasWon(11)) {
                       gameState = 0;
                     }
 
