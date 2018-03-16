@@ -20,7 +20,7 @@ using namespace std;
 float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2);
 
 // Handles input
-void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2);
+void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2, Ball &ball);
 
 
 // Selects and plays one of two background songs
@@ -50,22 +50,22 @@ int main()
     lsSound.setBuffer(lsSoundBuffer);
     noSound.setBuffer(noSoundBuffer);
 
-    //Random number to decide song/sound
+    // Random number to decide song/sound
     srand(time(NULL));
 
-    // gameState is 0 if menu, 1 if game is playing, 2 if configuring options
+    // GameState is 0 if menu, 1 if game is playing, 2 if configuring options
     int gameState = 0;
 
-    // configuring display window
+    // Configuring display window
     int resX = 1280, resY = 720;
     int newH = (1920*resY)/resX;
     int displace = (newH - 1080)/(-2);
     sf::RenderWindow window(sf::VideoMode(resX, resY), "Star Wars Pong");
     window.setFramerateLimit(60);
-    // window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
+    // Window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
 
     Menu menu(window.getSize().x, window.getSize().y);
-
+    // Brings up the first loading screen
     sf::Texture loadingTexture;
     if (!loadingTexture.loadFromFile("resources/images/menu/loading.png")) {
       cout << "cannot load loading image" << endl;
@@ -77,11 +77,12 @@ int main()
     window.display();
 
 
-    // background file loading
+    // Logo file loading
     sf::Texture logo;
     if (!logo.loadFromFile("resources/images/menu/logo.png")) {
       cout << "cannot load menu" << endl;
     }
+    //Exploding deathstar Animation
     sf::Texture * deadStarTextures = new sf::Texture[11];
     for (int i = 0; i <= 10; i++) {
         ostringstream convert;
@@ -90,10 +91,11 @@ int main()
             cout << "cannot load background: " << i << endl;
         }
     }
+    //Main logo
     sf::Sprite starWars;
     starWars.setTexture(logo);
     starWars.setScale(.2,.2);
-
+    // Background movement
     sf::Texture * textures = new sf::Texture[675];
     for (int i = 0; i < 675; i++) {
         ostringstream convert;
@@ -105,19 +107,21 @@ int main()
     background.setTexture(textures[0]);
     background.setScale(1,820/720);
 
+    //Streams the song from the file
     music.openFromFile("resources/audio/StarWarsSong.ogg");
     if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
     {
         cout << "cannot load song" << endl;
     }
 
-    music.setVolume(50);         // reduce the volume
+    music.setVolume(50);         // Reduce the volume
     music.play();
 
+    // Loads the lightsaber images onto the screen
     Paddle paddle1(sf::Vector2f(10,0), "resources/images/lightsaber/lightsaber_blue.png");
 
     Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber/lightsaber_red.png");
-
+    //Loads a new ball and the ball image
     Ball * ball = new Ball(sf::Vector2f(50,500), 5, 0, "resources/images/death_star/death_star.png");
 
     // Initialize scoreboard
@@ -128,7 +132,7 @@ int main()
 
     while (window.isOpen())
     {
-
+        // Scrolls through background images
         if(backgroundCounter >= 675) backgroundCounter = 0;
         background.setTexture(textures[backgroundCounter]);
         backgroundCounter++;
@@ -168,6 +172,7 @@ int main()
                                 chooseSong(rand() % 2);
                                 break;
                             case 1:
+                            // Exits game
                             window.close();
                             break;
                         }
@@ -180,24 +185,24 @@ int main()
 
         if (gameState == 1) {
 
-            checkInput(window, paddle1, paddle2);
+            checkInput(window, paddle1, paddle2, *ball);
 
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
                 ball->setVelAngle(getSpriteDistance(paddle1, *ball)*ball->maxAngle);
-
+                // Increases ball and paddle speed
                 paddle2.setMaxSpeed(ball->increaseSpeed());
-
+                // Plays sound effect
                 playLsSound(rand() % 5);
 
             } else if (ball->getGlobalBounds().intersects(paddle2.getGlobalBounds())) {
                 ball->setVelAngle(getSpriteDistance(paddle2, *ball)*ball->maxAngle);
                 ball->reverseDir();
-
+                // Increases ball and paddle speed
                 paddle1.setMaxSpeed(ball->increaseSpeed());
-
+                //plays sound effect
                 playLsSound(rand() % 5);
             }
-
+            // Checks to see if the ball is out of bounds
             char ballResult = ball->cont(window);
             if (ballResult) {
                 // Animation and deletion
@@ -252,7 +257,7 @@ int main()
         }
         window.display();
     }
-
+    // Completely deletes the death_star
     delete [] textures;
     delete [] deadStarTextures;
 
@@ -261,33 +266,61 @@ int main()
 
 
 
-void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2) {
+void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2, Ball &ball) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
     {
+        paddle1.setIsAI(false);
         paddle1.cont(window, -1);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
     {
+        paddle1.setIsAI(false);
         paddle1.cont(window, 1);
     } else {
-        paddle1.cont(window, 0);
+        if(paddle1.getIsAI()) {
+            float dir = getSpriteDistance(paddle1, ball);
+            if(dir > 0) {
+                paddle1.cont(window, -1);
+            } else if (!dir) {
+                paddle1.cont(window, 0);
+            } else {
+                paddle1.cont(window, 1);
+            }
+        } else {
+            paddle1.cont(window, 0);
+        }
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
     {
         // up key is pressed: move our character
+        paddle2.setIsAI(false);
         paddle2.cont(window, -1);
     } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
     {
         // down key is pressed: move our character
+        paddle2.setIsAI(false);
         paddle2.cont(window, 1);
     } else {
-        paddle2.cont(window, 0);
+        if(paddle2.getIsAI()) {
+            float dir = getSpriteDistance(paddle2, ball);
+            if(dir > 0) {
+                paddle2.cont(window, -1);
+            } else if (!dir) {
+                paddle2.cont(window, 0);
+            } else {
+                paddle2.cont(window, 1);
+            }
+        } else {
+            paddle2.cont(window, 0);
+        }
+
     }
 }
 
 
 
 float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2) {
+    // Gets the size of the paddles
     float center1 = sprt1.getPosition().y + ((sprt1.getGlobalBounds().height)/2);
     float center2 = sprt2.getPosition().y + ((sprt2.getGlobalBounds().height)/2);
     float distance = ((center1 - center2)/((sprt1.getGlobalBounds().height)/2));
@@ -298,22 +331,24 @@ float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2) {
 void chooseSong(bool sel){
 
     if(sel){
+        // Plays duel of fates if true
         if (!music.openFromFile("resources/audio/Fate.ogg"))
         {
             cout << "cannot load song" << endl;
         }
 
-        music.setVolume(50);         // reduce the volume
+        music.setVolume(50);         // Reduce the volume
 
         music.play();
 
     }else{
-        if (!music.openFromFile("resources/audio/March.wav"))
+        // Plays imperial march if false
+        if (!music.openFromFile("resources/audio/March.ogg"))
         {
             cout << "cannot load song" << endl;
         }
 
-        music.setVolume(50);         // reduce the volume
+        music.setVolume(50);         // Reduce the volume
 
         music.play();
     }
@@ -321,7 +356,7 @@ void chooseSong(bool sel){
 }
 
 void playLsSound (unsigned int sel) {
-
+    // Randomly choose a different sound effect for the lightsabers
     switch (sel) {
         case 0:
             lsSoundBuffer.loadFromFile("resources/audio/saber0.wav");
@@ -350,6 +385,7 @@ void playLsSound (unsigned int sel) {
 }
 
 void playNoSound (bool sel) {
+    // Plays the screams of defeat of Luke and Vader
     if (sel) {
         noSoundBuffer.loadFromFile("resources/audio/no_luke.wav");
         noSound.play();

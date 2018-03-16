@@ -2,6 +2,8 @@
 
 
 Paddle::Paddle (sf::Vector2f initPos, std::string image) {
+    isAI = true;
+
     maxSpeed = 5;
 
     speed = 0;
@@ -20,6 +22,7 @@ Paddle::Paddle (sf::Vector2f initPos, std::string image) {
 
 void Paddle::cont(sf::RenderWindow &window, char dir) {
     sf::Vector2f pos = getPosition();
+
     if (dir < 0) {
         if (speed > -maxSpeed) {
             speed--;
@@ -44,7 +47,7 @@ void Paddle::cont(sf::RenderWindow &window, char dir) {
             setPosition(pos.x, maxHeight);
         }
     }
-    move (0, speed);
+    move (0, (isAI ? speed/1.3 : speed)); // If it's an AI, slightly reduce the speed
 }
 
 int Paddle::getMaxSpeed() {
@@ -53,4 +56,12 @@ int Paddle::getMaxSpeed() {
 
 void Paddle::setMaxSpeed(int ms) {
     maxSpeed = ms;
+}
+
+bool Paddle::getIsAI() {
+    return isAI;
+}
+
+void Paddle::setIsAI(bool isAI) {
+    this->isAI = isAI;
 }

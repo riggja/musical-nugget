@@ -7,6 +7,7 @@ class Paddle : public sf::Sprite {
         sf::Texture tex;
         int speed;
         int maxSpeed;
+        bool isAI;
     public:
 
         Paddle (sf::Vector2f initPos, std::string image);
@@ -14,6 +15,8 @@ class Paddle : public sf::Sprite {
         void cont(sf::RenderWindow &window, char dir);
 
         int getMaxSpeed();
-
         void setMaxSpeed(int);
+
+        bool getIsAI();
+        void setIsAI(bool);
 };
