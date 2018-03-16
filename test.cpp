@@ -11,6 +11,7 @@
 #include "menu.h"
 #include "Ball.h"
 #include "Paddle.h"
+#include "Scoreboard.h"
 
 
 using namespace std;
@@ -119,7 +120,8 @@ int main()
 
     Ball * ball = new Ball(sf::Vector2f(50,500), 5, 0, "resources/images/death_star/death_star.png");
 
-    sf::Clock Clock;
+    // Initialize scoreboard
+    Scoreboard score(window);
 
     short backgroundCounter = 0;
     short deadStarCounter = 0;
@@ -143,7 +145,7 @@ int main()
             }
 
             if (gameState == 0) {
-                starWars.setPosition(resX/2 - 80,0);
+                starWars.setPosition(resX/2 - 130,0);
                 switch(event.type) {
                     case sf::Event::KeyReleased:
                     switch (event.key.code) {
@@ -211,6 +213,8 @@ int main()
 
                     sf::Vector2f initVel;
 
+                    score.score(ballResult);
+
                     if (ballResult == 1) {
                         // Give Player 1 the point
                         initVel = sf::Vector2f(-3,-3);
@@ -225,6 +229,10 @@ int main()
 
                     }
 
+                    if (score.hasWon(1)) {
+                      gameState = 0;
+                    }
+
                     ball = new Ball(sf::Vector2f(500,500), 5, M_PI, "resources/images/death_star/death_star.png");
                     deadStarCounter = 0;
                 }
@@ -234,7 +242,7 @@ int main()
             window.draw(paddle1);
             window.draw(paddle2);
             window.draw(*ball);
-
+            score.draw(window);
         }
 
         if (gameState == 0) {
