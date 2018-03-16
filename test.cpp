@@ -25,10 +25,9 @@ void chooseSound(int);
 
 int main()
 {
-
     //Random number to decide song/sound
     srand(time(NULL));
-    int num = rand();
+    int num = rand() % 100 + 1;
 
     // gameState is 0 if menu, 1 if game is playing, 2 if configuring options
     int gameState = 0;
@@ -58,17 +57,22 @@ int main()
 
     Menu menu(window.getSize().x, window.getSize().y);
 
-    // background file loading
-    sf::Texture backgroundTexture1;
-    sf::Texture * textures = new sf::Texture[675];
-    sf::Texture * deadStarTextures = new sf::Texture[11];
-    for (int i = 0; i < 675; i++) {
-        ostringstream convert;
-        convert << setw(5) << setfill('0') << i + 1;
-        if (!textures[i].loadFromFile("resources/images/background/flying/background"+convert.str()+".jpg")) {
-            cout << "cannot load background: " << i + 1 << endl;
-        }
+    sf::Texture loadingTexture;
+    if (!loadingTexture.loadFromFile("resources/images/menu/loading.png")) {
+      cout << "cannot load loading image" << endl;
     }
+    sf::Sprite background;
+    background.setTexture(loadingTexture);
+    background.setScale(.9,1);
+    window.draw(background);
+    window.display();
+
+    // background file loading
+    sf::Texture logo;
+    if (!logo.loadFromFile("resources/images/menu/logo.png")) {
+      cout << "cannot load menu" << endl;
+    }
+    sf::Texture * deadStarTextures = new sf::Texture[11];
     for (int i = 0; i <= 10; i++) {
         ostringstream convert;
         convert << setw(2) << setfill('0') << i;
@@ -76,8 +80,18 @@ int main()
             cout << "cannot load background: " << i << endl;
         }
     }
+    sf::Sprite starWars;
+    starWars.setTexture(logo);
+    starWars.setScale(.2,.2);
 
-    sf::Sprite background;
+    sf::Texture * textures = new sf::Texture[675];
+    for (int i = 0; i < 675; i++) {
+        ostringstream convert;
+        convert << setw(5) << setfill('0') << i + 1;
+        if (!textures[i].loadFromFile("resources/images/background/flying/background"+convert.str()+".jpg")) {
+            cout << "cannot load background: " << i + 1 << endl;
+        }
+    }
     background.setTexture(textures[0]);
     background.setScale(1,820/720);
 
@@ -94,6 +108,11 @@ int main()
 
     while (window.isOpen())
     {
+
+        if(backgroundCounter >= 675) backgroundCounter = 0;
+        background.setTexture(textures[backgroundCounter]);
+        backgroundCounter++;
+
         sf::Event event;
         while (window.pollEvent(event))
         {
@@ -101,6 +120,7 @@ int main()
             window.close();
 
             if (gameState == 0) {
+                starWars.setPosition(resX/2 - 80,0);
                 switch(event.type) {
                     case sf::Event::KeyReleased:
                     switch (event.key.code) {
@@ -138,19 +158,22 @@ int main()
         window.clear();
 
         if (gameState == 1) {
+
             checkInput(window, paddle1, paddle2);
 
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
                 ball->setVelAngle(getSpriteDistance(paddle1, *ball)*(*ball).maxAngle);
+
+                chooseSound(num);
             } else if (ball->getGlobalBounds().intersects(paddle2.getGlobalBounds())) {
                 sf::Vector2f vel = ball->getVel();
                 ball->setVel(sf::Vector2f(-vel.x, vel.y));
+                chooseSound(num);
             }
-
-            if(backgroundCounter >= 675) backgroundCounter = 0;
-            background.setTexture(textures[backgroundCounter]);
-            backgroundCounter++;
-
+            //
+            // if(backgroundCounter >= 675) backgroundCounter = 0;
+            // background.setTexture(textures[backgroundCounter]);
+            // backgroundCounter++;
 
             char ballResult = ball->cont(window);
             if (ballResult) {
@@ -182,6 +205,8 @@ int main()
         }
 
         if (gameState == 0) {
+            window.draw(background);
+            window.draw(starWars);
             menu.draw(window);
         }
         window.display();
@@ -238,11 +263,11 @@ void chooseSong(int x){
 
         music1.play();
 
-    } else {
+    }else{
 
         sf::Music music2;
-        music2.openFromFile("resources/audio/March.ogg");
-        if (!music2.openFromFile("resources/audio/March.ogg"))
+        music2.openFromFile("resources/audio/March.wav");
+        if (!music2.openFromFile("resources/audio/March.wav"))
         {
             cout << "cannot load song" << endl;
         }
@@ -251,4 +276,46 @@ void chooseSong(int x){
 
         music2.play();
     }
+
+}
+
+void chooseSound(int x){
+    if(x<=20){
+        sf::SoundBuffer buffer;
+        buffer.loadFromFile("resources/audio/Saber.wav");
+        sf::Sound sound;
+        sound.setBuffer(buffer);
+        sound.play();
+
+    }else if(x>20 && x<=40){
+        sf::SoundBuffer buffer1;
+        buffer1.loadFromFile("resources/audio/Saber1.wav");
+        sf::Sound sound1;
+        sound1.setBuffer(buffer1);
+        sound1.play();
+
+    }else if(x>40 && x<=60){
+        sf::SoundBuffer buffer2;
+        buffer2.loadFromFile("resources/audio/Saber2.wav");
+        sf::Sound sound2;
+        sound2.setBuffer(buffer2);
+        sound2.play();
+
+    }else if(x>60 && x<=80){
+        sf::SoundBuffer buffer3;
+        buffer3.loadFromFile("resources/audio/Saber3.wav");
+        sf::Sound sound3;
+        sound3.setBuffer(buffer3);
+        sound3.play();
+
+    }else if(x>80){
+        sf::SoundBuffer buffer4;
+        buffer4.loadFromFile("resources/audio/Saber4.wav");
+        sf::Sound sound4;
+        sound4.setBuffer(buffer4);
+        sound4.play();
+    }
+
+
+
 }
