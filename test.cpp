@@ -137,6 +137,11 @@ int main()
             if (event.type == sf::Event::Closed)
             window.close();
 
+            // Press X to go to Menu
+            if (event.key.code == sf::Keyboard::X) {
+              gameState = 0;
+            }
+
             if (gameState == 0) {
                 starWars.setPosition(resX/2 - 80,0);
                 switch(event.type) {
@@ -161,10 +166,6 @@ int main()
                             chooseSong(rand() % 2);
                             break;
                             case 1:
-                            gameState = 2;
-                            std::cout << "Option button has been pressed" << std::endl;
-                            break;
-                            case 2:
                             window.close();
                             break;
                         }
