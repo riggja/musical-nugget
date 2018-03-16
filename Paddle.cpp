@@ -47,7 +47,7 @@ void Paddle::cont(sf::RenderWindow &window, char dir) {
             setPosition(pos.x, maxHeight);
         }
     }
-    move (0, (isAI ? speed/1.5 : speed)); // If it's an AI, slightly reduce the speed
+    move (0, (isAI ? speed/1.3 : speed)); // If it's an AI, slightly reduce the speed
 }
 
 int Paddle::getMaxSpeed() {
