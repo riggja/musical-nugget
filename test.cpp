@@ -168,28 +168,13 @@ int main()
                         case sf::Keyboard::Return:
                         switch (menu.GetPressedItem()) {
                             case 0:
-<<<<<<< HEAD
-                            // Switches to the game screen
-                            gameState = 1;
-                            std::cout << "Play button has been pressed" << std::endl;
-                            music.stop();
-                            chooseSong(rand() % 2);
-                            break;
-                            case 1:
-                            gameState = 2;
-                            // Switches to the options screen
-                            std::cout << "Option button has been pressed" << std::endl;
-                            break;
-                            case 2:
-                            // Exits the game
-=======
                                 gameState = 1;
                                 std::cout << "Play button has been pressed" << std::endl;
                                 music.stop();
                                 chooseSong(rand() % 2);
                                 break;
                             case 1:
->>>>>>> 5eac8cc5e5964c6bce9fed2934f604fa96e4d10d
+                            // Exits game
                             window.close();
                             break;
                         }
@@ -328,7 +313,7 @@ void chooseSong(bool sel){
 
     }else{
         // Plays imperial march if false
-        if (!music.openFromFile("resources/audio/March.wav"))
+        if (!music.openFromFile("resources/audio/March.ogg"))
         {
             cout << "cannot load song" << endl;
         }
