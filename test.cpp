@@ -140,25 +140,35 @@ int main()
         {
             if (event.type == sf::Event::Closed)
             window.close();
+<<<<<<< HEAD
             // In the main menu
+=======
+
+            // Press X to go to Menu
+            if (event.key.code == sf::Keyboard::X) {
+              gameState = 0;
+            }
+
+>>>>>>> 5eac8cc5e5964c6bce9fed2934f604fa96e4d10d
             if (gameState == 0) {
                 starWars.setPosition(resX/2 - 80,0);
                 switch(event.type) {
                     case sf::Event::KeyReleased:
                     switch (event.key.code) {
                         case sf::Keyboard::Up:
-                        std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
-                        menu.MoveUp();
-                        break;
+                            std::cout << "Up button has been pressed " << menu.GetPressedItem() << std::endl;
+                            menu.MoveUp();
+                            break;
 
                         case sf::Keyboard::Down:
-                        menu.MoveDown();
-                        std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
-                        break;
+                            menu.MoveDown();
+                            std::cout << "Down button has been pressed: " << menu.GetPressedItem() << std::endl;
+                            break;
 
                         case sf::Keyboard::Return:
                         switch (menu.GetPressedItem()) {
                             case 0:
+<<<<<<< HEAD
                             // Switches to the game screen
                             gameState = 1;
                             std::cout << "Play button has been pressed" << std::endl;
@@ -172,6 +182,14 @@ int main()
                             break;
                             case 2:
                             // Exits the game
+=======
+                                gameState = 1;
+                                std::cout << "Play button has been pressed" << std::endl;
+                                music.stop();
+                                chooseSong(rand() % 2);
+                                break;
+                            case 1:
+>>>>>>> 5eac8cc5e5964c6bce9fed2934f604fa96e4d10d
                             window.close();
                             break;
                         }

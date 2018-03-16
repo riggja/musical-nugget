@@ -1,7 +1,7 @@
 #include "menu.h"
 
 Menu::Menu(float width, float height) {
-    if (!this->font.loadFromFile("resources/fonts/arial.ttf"))
+    if (!this->font.loadFromFile("resources/fonts/jedi.ttf"))
     {
         // handle error
     }
