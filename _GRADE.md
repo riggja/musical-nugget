@@ -56,3 +56,57 @@ _Feedback_
 
 Grade: __M__ 3/1/2018
 
+_Feedback_
+* Included complete UML diagrams __complete__
+* Included a procedural flow diagram __complete__
+* Listed anticipated challenges __complete__
+* Detailed project management plan __complete__
+
+Seems you have a few left over lines from a code merge. Please clean up.
+
+Grade: __E__ 3/12/2018
+
+
+## Project Implementation
+
+* Your project implementation MUST include the following:
+  * Use the [CS Department GIT Repository](http://gitlab.cs.wallawalla.edu) for version control and submission.
+  * __Object-oriented programming__ with classes.
+  * __Separate interfaces (headers)__, __implementation files__, a __main driver__, and  __test driver__.
+  * __File I/O__. 
+    Include some form of file use even if only to capture results.
+  * __Well-commented, “clean”, and well-organized code__.
+  * __Well-tested code__ with a driver file.
+  * __README.md file__ complete with known bugs and user operation instructions.
+  * You should __employ__ the following concepts _as appropriate_ to the program: vectors, pointers, dynamic memory, string manipulation. 
+* __Quality of the code__ and the problem __level of difficulty__ will be considered.
+* __To make an E on this project__, you must reach into advanced concepts and present quality code solution. 
+  Top projects designs show ingenuity, creativity, and efficiency. 
+  Demonstration that you have shown initiative, going above and beyond basic course coverage into utilization of advanced concepts. 
+  For instance, inheritance, polymorphism, recursion, graphics libraries, some other more advanced data structures of the STL Library (e.g. linked lists, stacks, queues, binary trees, etc.) 
+
+___Submission___
+Gitlab project code will be up-to-date per the due date.
+
+### Grade
+
+_Feedback_
+* Group project is saved in Gitlab __complete__
+* Object-oriented programming __complete__
+* Separate interfaces, implementation, main, and test code __complete__
+* Uses file I/O  __incomplete__
+  * No file i/o
+* Well-commented, “clean”, and well-organized code  __incomplete__
+  * Interfaces are missing documentation
+  * Inconsistent formatting
+* Well-tested code with a driver file __incomplete__
+  * Missing tests
+* README.md file with known bugs and user operation instructions __complete__
+* Used appropriate concepts to the program __complete__
+  * Examples: vectors, pointers, dynamic memory, string manipulation
+* Quality of the code __complete__
+* Use of advanced concepts __complete__
+
+Please add test and function documentation.
+
+Grade: __R__ 3/19/2018
