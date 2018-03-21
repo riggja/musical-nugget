@@ -11,17 +11,24 @@ class Ball : public sf::Sprite {
 
     public:
         const float maxAngle;
-
+        
+        // Sets the default settings for the ball 
         Ball (sf::Vector2f initPos, float initSpeed, float initAngle, std::string image);
+        
+        // Sets movement speed and positioning of the ball
         char cont(sf::RenderWindow &window);
-
+        
+        // Speed of the object movement
         sf::Vector2f getVel();
         void setVel(sf::Vector2f vel);
-
+        
+        // Angle of ball bounce
         void setVelAngle(float);
-
+        
+        // Turns ball around if it hits a paddle
         void reverseDir();
-
+        
+        // Gets the speed of the ball
         float getSpeed();
 
         // Increases the speed by 0.1 and returns it.
