@@ -6,13 +6,13 @@
 Paddle::Paddle (sf::Vector2f initPos, std::string image) {
     // Intialize as an AI; this will be overrided if a player inputs a direction.
     isAI = true;
-    
+
     // Initialize maxSpeed to 5; this will increase with the speed of the ball.
     maxSpeed = 5;
-    
+
     // Start out sationary.
     speed = 0;
-    
+
     // Set the initial position of the paddle.
     setPosition(initPos);
 
@@ -22,7 +22,7 @@ Paddle::Paddle (sf::Vector2f initPos, std::string image) {
     }
     // Apply the texture to the sprite.
     setTexture(tex);
-    
+
     // Scale the sprite appropriately; the default size is far too big.
     scale (.12, .12);
 }
@@ -30,8 +30,8 @@ Paddle::Paddle (sf::Vector2f initPos, std::string image) {
 void Paddle::cont(sf::RenderWindow &window, char dir) {
     // Get the sprite's global position.
     sf::Vector2f pos = getPosition();
-    
-    Move upward
+
+    // Move upward
     if (dir < 0) {
         // Accelerate
         if (speed > -maxSpeed) {
