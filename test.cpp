@@ -13,7 +13,6 @@
 #include "Paddle.h"
 #include "Scoreboard.h"
 
-
 using namespace std;
 
 // Gets the distance between two sprites
@@ -22,28 +21,25 @@ float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2);
 // Handles input
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2, Ball &ball);
 
-
 // Selects and plays one of two background songs
 void chooseSong(bool);
+
 // The global music player
 sf::Music music;
 
-
 // Plays one of four lightsaber sound effects
 void playLsSound(unsigned int);
-// The lightsaber sounud buffer
+
+// The lightsaber sound buffer
 sf::SoundBuffer lsSoundBuffer;
 sf::Sound lsSound;
 
-
 // Plays one of two "Nooo" sounds
 void playNoSound(bool);
+
 // The lightsaber sounud buffer
 sf::SoundBuffer noSoundBuffer;
 sf::Sound noSound;
-
-
-
 
 int main()
 {
@@ -53,7 +49,7 @@ int main()
     // Random number to decide song/sound
     srand(time(NULL));
 
-    // GameState is 0 if menu, 1 if game is playing, 2 if configuring options
+    // GameState is 0 if menu and 1 if game is playing
     int gameState = 0;
 
     // Configuring display window
@@ -62,10 +58,10 @@ int main()
     int displace = (newH - 1080)/(-2);
     sf::RenderWindow window(sf::VideoMode(resX, resY), "Star Wars Pong");
     window.setFramerateLimit(60);
-    // Window.setView(sf::View(sf::FloatRect(0, displace, 1920, newH)));
 
     Menu menu(window.getSize().x, window.getSize().y);
-    // Brings up the first loading screen
+    
+    // Loads Loading Screen Image
     sf::Texture loadingTexture;
     if (!loadingTexture.loadFromFile("resources/images/menu/loading.png")) {
       cout << "cannot load loading image" << endl;
@@ -76,13 +72,16 @@ int main()
     window.draw(background);
     window.display();
 
-
-    // Logo file loading
+    // Loads Logo
     sf::Texture logo;
     if (!logo.loadFromFile("resources/images/menu/logo.png")) {
       cout << "cannot load menu" << endl;
     }
-    //Exploding deathstar Animation
+    sf::Sprite starWars;
+    starWars.setTexture(logo);
+    starWars.setScale(.2,.2);
+    
+    // Loads Death Star Animations
     sf::Texture * deadStarTextures = new sf::Texture[11];
     for (int i = 0; i <= 10; i++) {
         ostringstream convert;
@@ -91,11 +90,8 @@ int main()
             cout << "cannot load background: " << i << endl;
         }
     }
-    //Main logo
-    sf::Sprite starWars;
-    starWars.setTexture(logo);
-    starWars.setScale(.2,.2);
-    // Background movement
+    
+    // Loads Background Gif
     sf::Texture * textures = new sf::Texture[675];
     for (int i = 0; i < 675; i++) {
         ostringstream convert;
@@ -107,24 +103,23 @@ int main()
     background.setTexture(textures[0]);
     background.setScale(1,820/720);
 
-    //Streams the song from the file
+    // Loads Music Files
     music.openFromFile("resources/audio/StarWarsSong.ogg");
     if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
     {
         cout << "cannot load song" << endl;
     }
-
     music.setVolume(50);         // Reduce the volume
     music.play();
 
-    // Loads the lightsaber images onto the screen
+    // Loads Lightsaber Textures
     Paddle paddle1(sf::Vector2f(10,0), "resources/images/lightsaber/lightsaber_blue.png");
-
     Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber/lightsaber_red.png");
-    //Loads a new ball and the ball image
+    
+    // Instantiates Ball Object
     Ball * ball = new Ball(sf::Vector2f(50,500), 5, 0, "resources/images/death_star/death_star.png");
 
-    // Initialize scoreboard
+    // Initialize Scoreboard
     Scoreboard score(window);
 
     short backgroundCounter = 0;
@@ -147,8 +142,10 @@ int main()
             if (event.key.code == sf::Keyboard::X) {
               gameState = 0;
             }
-
+            
+            // Menu Screen
             if (gameState == 0) {
+                // Displays Logo
                 starWars.setPosition(resX/2 - 130,0);
                 switch(event.type) {
                     case sf::Event::KeyReleased:
@@ -164,12 +161,13 @@ int main()
                         case sf::Keyboard::Return:
                         switch (menu.GetPressedItem()) {
                             case 0:
+                            // Plays Game
                                 gameState = 1;
                                 music.stop();
                                 chooseSong(rand() % 2);
                                 break;
                             case 1:
-                            // Exits game
+                            // Exits Game
                             window.close();
 
                             break;
@@ -184,10 +182,10 @@ int main()
         if (gameState == 1) {
 
             checkInput(window, paddle1, paddle2, *ball);
-
+            
+            // if ball collides with paddle, increases ball and paddle speed
             if (ball->getGlobalBounds().intersects(paddle1.getGlobalBounds())) {
                 ball->setVelAngle(getSpriteDistance(paddle1, *ball)*ball->maxAngle);
-                // Increases ball and paddle speed
                 paddle2.setMaxSpeed(ball->increaseSpeed());
                 // Plays sound effect
                 playLsSound(rand() % 5);
@@ -195,15 +193,14 @@ int main()
             } else if (ball->getGlobalBounds().intersects(paddle2.getGlobalBounds())) {
                 ball->setVelAngle(getSpriteDistance(paddle2, *ball)*ball->maxAngle);
                 ball->reverseDir();
-                // Increases ball and paddle speed
                 paddle1.setMaxSpeed(ball->increaseSpeed());
                 //plays sound effect
                 playLsSound(rand() % 5);
             }
-            // Checks to see if the ball is out of bounds
+            
             char ballResult = ball->cont(window);
+            // If ball is out of bounds, play Death Star destruction sequence and generate new Ball
             if (ballResult) {
-                // Animation and deletion
                 if (!deadStarCounter) {
                     // Play the explosion sound effect; we'll just borrow the lightsaber buffer, since it won't play at the same time.
                     lsSoundBuffer.loadFromFile("resources/audio/explosion.wav");
@@ -218,19 +215,15 @@ int main()
 
                     // awards score to scoring player
                     score.score(ballResult);
-
+                    
                     if (ballResult == 1) {
-                        // Give Player 1 the point
+                        // Player 1 Scores
                         initVel = sf::Vector2f(-3,-3);
-
                         playNoSound(0);
-
                     } else {
-                        // Give Player 2 the point
+                        // Player 2 Scores
                         initVel = sf::Vector2f(3,3);
-
                         playNoSound(1);
-
                     }
 
                     // return to menu upon one player winning
@@ -242,7 +235,8 @@ int main()
                     deadStarCounter = 0;
                 }
             }
-
+            
+            // Draw Game Elements
             window.draw(background);
             window.draw(paddle1);
             window.draw(paddle2);
@@ -251,13 +245,15 @@ int main()
         }
 
         if (gameState == 0) {
+            // Draw Menu Elements
             window.draw(background);
             window.draw(starWars);
             menu.draw(window);
         }
         window.display();
     }
-    // Completely deletes the death_star
+    
+    // Frees Heap
     delete [] textures;
     delete [] deadStarTextures;
 
