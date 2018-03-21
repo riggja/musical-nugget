@@ -1,3 +1,5 @@
+// Class created by Matthew
+
 #include <SFML/Graphics.hpp>
 #include <string>
 #include <sstream>

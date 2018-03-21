@@ -1,16 +1,19 @@
+// Class created by Cameron
+
 #include "Ball.h"
 #include <math.h>
 
 Ball::Ball (sf::Vector2f initPos, float initSpeed, float initAngle, std::string image) : maxAngle(M_PI/4) {
-    // Set the initial position of the ball
+    // Set the initial position of the ball.
     setPosition(initPos);
-
+    
+    // Set the initial speed of the ball.
     speed = initSpeed;
 
-    // Set the initial velocity of the ball
+    // Set the initial angle of the ball.
     setVelAngle(initAngle);
 
-    // Try to apply the specified image to the texture
+    // Try to apply the specified image to the texture.
     if (!tex.loadFromFile(image)) {
         std::cout << "Unable to load specified texture \"" << image << "\"." << std::endl;
     }
@@ -19,21 +22,30 @@ Ball::Ball (sf::Vector2f initPos, float initSpeed, float initAngle, std::string 
 }
 
 char Ball::cont(sf::RenderWindow &window) {
+    // Get the sprite's global position.
     sf::Vector2f pos = getPosition();
+    
+    // Have we gone outside of the Y boundaries?
     if (pos.y <= 0 || pos.y+getGlobalBounds().height >= window.getSize().y) {
+        // If so, reverse.
         vel.y *= -1;
     }
-    if (pos.x <= 0) {
-        vel.x *= -1;
+    // Have we gone outside of the X boundaries?
+    if (pos.x <= 0) {   // Left side
+        // Stop moving
         vel = sf::Vector2f(0,0);
+        // Notify the caller that we hit the left boundary.
         return -1;
-    } else if (pos.x+getGlobalBounds().width >= window.getSize().x) {
-        vel.x *= -1;
+    } else if (pos.x+getGlobalBounds().width >= window.getSize().x) {   // Right side
+        // Stop moving
         vel = sf::Vector2f(0,0);
+        // Notify the caller that we hit the right boundary.
         return 1;
+    } else {    // We haven't hit anything; move.
+        move(vel);
     }
-
-    move(vel);
+    
+    // Notify the caller that we haven't hit anything.
     return 0;
 }
 
@@ -46,6 +58,7 @@ void Ball::setVel(sf::Vector2f vel) {
 }
 
 void Ball::setVelAngle(float angle) {
+    // Calculate the velocity if the speed remains but the angle changes; apply this new value to vel.
     vel = sf::Vector2f((speed*cos(angle)),(speed*-sin(angle)));
 }
 

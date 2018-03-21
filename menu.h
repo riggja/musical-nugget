@@ -1,3 +1,5 @@
+// Class created by Matthew
+
 #pragma once
 #include <iostream>
 #include "SFML/Graphics.hpp"

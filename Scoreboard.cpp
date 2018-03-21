@@ -1,3 +1,5 @@
+// Class created by Matthew
+
 #include "Scoreboard.h"
 using namespace std;
 
