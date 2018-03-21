@@ -18,6 +18,7 @@ class Paddle : public sf::Sprite {
         // Is this paddle computer-controlled?
         bool isAI;
     public:
+<<<<<<< HEAD
         // A constructor taking an intial position and a path to an image.
         Paddle (sf::Vector2f initPos, std::string image);
         
@@ -29,6 +30,19 @@ class Paddle : public sf::Sprite {
         void setMaxSpeed(int);
         
         // Mutator and Accessor for isAI
+=======
+        // Constructor to set the position of the paddle and tha image sprite
+        Paddle (sf::Vector2f initPos, std::string image);
+        
+        // Looks at the window and sets the direction and spped of the paddle
+        void cont(sf::RenderWindow &window, char dir);
+        
+        // Gets/sets movement speed of the paddle
+        int getMaxSpeed();
+        void setMaxSpeed(int);
+        
+        // Checks to see if the AI is playing or a player is taking control
+>>>>>>> 8fc8fc43ed17846e41b751949958c0c492eca89d
         bool getIsAI();
         void setIsAI(bool);
 };

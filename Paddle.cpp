@@ -33,11 +33,11 @@ void Paddle::cont(sf::RenderWindow &window, char dir) {
     
     Move upward
     if (dir < 0) {
-        // Go for maximum upward speed.
+        // Accelerate
         if (speed > -maxSpeed) {
             speed--;
         }
-        // Don't move outside boundaries.
+        // Don't move outside boundary.
         if (pos.y <= 0) {
             speed = 0;
             setPosition(pos.x, 0);
@@ -58,7 +58,7 @@ void Paddle::cont(sf::RenderWindow &window, char dir) {
         if (speed < maxSpeed) {
             speed++;
         }
-        // Decelerate
+        // Don't move outside boundary.
         if (pos.y >= maxHeight) {
             speed = 0;
             setPosition(pos.x, maxHeight);

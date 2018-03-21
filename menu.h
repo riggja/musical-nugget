@@ -9,14 +9,13 @@ using namespace std;
 
 class Menu {
     public:
-        Menu(float width, float height);
+        Menu(float width, float height); // Constructor takes in width and height of Window object
         ~Menu();
-
-        void draw(sf::RenderWindow &window);
-        void MoveUp();
-        void MoveDown();
-        int GetPressedItem() { return selectedItemIndex; }
-
+        
+        void draw(sf::RenderWindow &window); // Draws Menu objects
+        void MoveUp(); // Moves selection up
+        void MoveDown(); // Moves selection down
+        int GetPressedItem() { return selectedItemIndex; } // Changes gamestate
     private:
         int selectedItemIndex;
         sf::Font font;

@@ -19,6 +19,7 @@ class Ball : public sf::Sprite {
         // This determines the maximum angle at which the ball can be sent.
         const float maxAngle;
         
+<<<<<<< HEAD
         // Constructor taking an intial position, speed, and angle, as well as a path to an image.
         Ball (sf::Vector2f initPos, float initSpeed, float initAngle, std::string image);
         
@@ -36,6 +37,25 @@ class Ball : public sf::Sprite {
         void reverseDir();
         
         // Accessor for speed
+=======
+        // Sets the default settings for the ball 
+        Ball (sf::Vector2f initPos, float initSpeed, float initAngle, std::string image);
+        
+        // Sets movement speed and positioning of the ball
+        char cont(sf::RenderWindow &window);
+        
+        // Speed of the object movement
+        sf::Vector2f getVel();
+        void setVel(sf::Vector2f vel);
+        
+        // Angle of ball bounce
+        void setVelAngle(float);
+        
+        // Turns ball around if it hits a paddle
+        void reverseDir();
+        
+        // Gets the speed of the ball
+>>>>>>> 8fc8fc43ed17846e41b751949958c0c492eca89d
         float getSpeed();
 
         // Increases the speed by 0.1 and returns it.
