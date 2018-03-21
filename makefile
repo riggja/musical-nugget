@@ -8,7 +8,7 @@ LIB_DIR = -LSFML-2.4.2/lib
 LINK_TARGET = $(ODIR)/swpong
 MKDIR_P = mkdir -p
 
-_OBJS = game.o menu.o Ball.o Paddle.o Scoreboard.o
+_OBJS = ScoreboardTest.o Scoreboard.o Ball.o Paddle.o
 OBJS = $(patsubst %,$(ODIR)/%,$(_OBJS))
 
 all: directories $(LINK_TARGET)

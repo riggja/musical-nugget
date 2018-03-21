@@ -16,6 +16,8 @@ public:
   char hasWon(int maxScore); // hasWon checks to see if a player has won
   void draw(sf::RenderWindow &window); // Draw displays both scores
   void reset(); // Resets scores
+  int getPlayerOneScore() { return playerOneScore; } // accessor function for playerOneScore
+  int getPlayerTwoScore() { return playerTwoScore; } // accessor function for playerTwoScore
 private:
   int playerOneScore;
   int playerTwoScore;
