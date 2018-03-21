@@ -45,54 +45,51 @@ int main() {
   bool hasWon = false;
   sf::Clock clock;
   clock.restart();
-  while (window.isOpen())
-    {
-        sf::Event event;
-        while (window.pollEvent(event))
-        {
-            if (event.type == sf::Event::Closed) {
-              window.close();
-            }
-
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-              score.score(1);
-              cout << "Player 1 is now at: " << score.getPlayerOneScore() << " points" << endl;
-            }
-
-            if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-              score.score(-1);
-              cout << "Player 2 is now at: " << score.getPlayerTwoScore() << " points" << endl;
-            }
-
-            if (score.hasWon(maxScore)) {
-              hasWon = true;
-              if (score.getPlayerOneScore() >= maxScore) {
-                cout << "Player One Won" << endl;
-                changeText(text, "Player One Won");
-              } else if (score.getPlayerTwoScore() >= maxScore) {
-                cout << "Player Two Won" << endl;
-                changeText(text, "Player Two Won");
-              }
-              if (clock.getElapsedTime().asSeconds() >= 1) {
-                window.close();
-              }
-            }
-
-            if (hasWon == true) {
-              clock.getElapsedTime();
-            } else {
-              clock.restart();
-            }
-
-        }
-
-        window.clear();
-        score.draw(window);
-        window.draw(text);
-        window.display();
+  while (window.isOpen()) {
+    sf::Event event;
+    while (window.pollEvent(event)) {
+      if (event.type == sf::Event::Closed) {
+        window.close();
       }
 
-    return 0;
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
+        score.score(1);
+        cout << "Player 1 is now at: " << score.getPlayerOneScore() << " points" << endl;
+      }
+
+      if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
+        score.score(-1);
+        cout << "Player 2 is now at: " << score.getPlayerTwoScore() << " points" << endl;
+      }
+
+      if (score.hasWon(maxScore)) {
+        hasWon = true;
+        if (score.getPlayerOneScore() >= maxScore) {
+          cout << "Player One Won" << endl;
+          changeText(text, "Player One Won");
+        } else if (score.getPlayerTwoScore() >= maxScore) {
+          cout << "Player Two Won" << endl;
+          changeText(text, "Player Two Won");
+        }
+        if (clock.getElapsedTime().asSeconds() >= 1) {
+          window.close();
+        }
+      }
+
+      if (hasWon == true) {
+        clock.getElapsedTime();
+      } else {
+        clock.restart();
+      }
+
+    }
+
+    window.clear();
+    score.draw(window);
+    window.draw(text);
+    window.display();
+  }
+  return 0;
 }
 
 void changeText(sf::Text &text, string string) {

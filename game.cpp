@@ -13,7 +13,6 @@
 #include "Paddle.h"
 #include "Scoreboard.h"
 
-
 using namespace std;
 
 // Gets the distance between two sprites
@@ -22,12 +21,10 @@ float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2);
 // Handles input
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2, Ball &ball);
 
-
 // Selects and plays one of two background songs
 void chooseSong(bool);
 // The global music player
 sf::Music music;
-
 
 // Plays one of four lightsaber sound effects
 void playLsSound(unsigned int);
@@ -35,15 +32,11 @@ void playLsSound(unsigned int);
 sf::SoundBuffer lsSoundBuffer;
 sf::Sound lsSound;
 
-
 // Plays one of two "Nooo" sounds
 void playNoSound(bool);
 // The lightsaber sounud buffer
 sf::SoundBuffer noSoundBuffer;
 sf::Sound noSound;
-
-
-
 
 int main()
 {
@@ -76,12 +69,12 @@ int main()
     window.draw(background);
     window.display();
 
-
     // Logo file loading
     sf::Texture logo;
     if (!logo.loadFromFile("resources/images/menu/logo.png")) {
       cout << "cannot load menu" << endl;
     }
+
     //Exploding deathstar Animation
     sf::Texture * deadStarTextures = new sf::Texture[11];
     for (int i = 0; i <= 10; i++) {
@@ -91,10 +84,12 @@ int main()
             cout << "cannot load background: " << i << endl;
         }
     }
+
     //Main logo
     sf::Sprite starWars;
     starWars.setTexture(logo);
     starWars.setScale(.2,.2);
+
     // Background movement
     sf::Texture * textures = new sf::Texture[675];
     for (int i = 0; i < 675; i++) {
@@ -113,16 +108,15 @@ int main()
     {
         cout << "cannot load song" << endl;
     }
-
     music.setVolume(50);         // Reduce the volume
     music.play();
 
     // Loads the lightsaber images onto the screen
     Paddle paddle1(sf::Vector2f(10,0), "resources/images/lightsaber/lightsaber_blue.png");
-
     Paddle paddle2(sf::Vector2f(window.getSize().x-paddle2.getGlobalBounds().width-30,0), "resources/images/lightsaber/lightsaber_red.png");
-    //Loads a new ball and the ball image
-    Ball * ball = new Ball(sf::Vector2f(50,500), 5, 0, "resources/images/death_star/death_star.png");
+
+    //Loads a new ball and the ball image; places its x in the middle, and randomizes its y. Randomizes left or right starting direction.
+    Ball * ball = new Ball(sf::Vector2f((window.getSize().x)/2,(float)(rand() % (window.getSize().y-100))+50), 5, ((rand() % 2) ? 0 : M_PI), "resources/images/death_star/death_star.png");
 
     // Initialize scoreboard
     Scoreboard score(window);
@@ -130,26 +124,32 @@ int main()
     short backgroundCounter = 0;
     short deadStarCounter = 0;
 
-    while (window.isOpen())
-    {
+    while (window.isOpen()) {
         // Scrolls through background images
         if(backgroundCounter >= 675) backgroundCounter = 0;
         background.setTexture(textures[backgroundCounter]);
         backgroundCounter++;
 
         sf::Event event;
-        while (window.pollEvent(event))
-        {
+        while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
             window.close();
 
             // Press X to go to Menu
             if (event.key.code == sf::Keyboard::X) {
               gameState = 0;
+              music.openFromFile("resources/audio/StarWarsSong.ogg");
+              if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
+              {
+                  cout << "cannot load song" << endl;
+              }
+
+              music.setVolume(50);         // Reduce the volume
+              music.play();
             }
 
             if (gameState == 0) {
-                starWars.setPosition(resX/2 - 130,0);
+                starWars.setPosition(resX/2 - 130,20);
                 switch(event.type) {
                     case sf::Event::KeyReleased:
                     switch (event.key.code) {
@@ -164,6 +164,12 @@ int main()
                         case sf::Keyboard::Return:
                         switch (menu.GetPressedItem()) {
                             case 0:
+                                // Reset paddles
+                                paddle1.setIsAI(true);
+                                paddle2.setIsAI(true);
+                                // Rest score
+                                score.reset();
+
                                 gameState = 1;
                                 music.stop();
                                 chooseSong(rand() % 2);
@@ -212,6 +218,9 @@ int main()
                 if (deadStarCounter <= 10) {
                     ball->setTexture(deadStarTextures[deadStarCounter++]);
                 } else {
+                    // Save the speed so we can revert to it
+                    float oldSpeed = ball->getSpeed();
+
                     delete ball;
 
                     sf::Vector2f initVel;
@@ -236,9 +245,19 @@ int main()
                     // return to menu upon one player winning
                     if (score.hasWon(11)) {
                       gameState = 0;
+                      music.openFromFile("resources/audio/StarWarsSong.ogg");
+                      if (!music.openFromFile("resources/audio/StarWarsSong.ogg"))
+                      {
+                          cout << "cannot load song" << endl;
+                      }
+
+                      music.setVolume(50);         // Reduce the volume
+                      music.play();
                     }
 
-                    ball = new Ball(sf::Vector2f(500,500), 5, M_PI, "resources/images/death_star/death_star.png");
+                    // Spawn a new ball as we did initially; however, this time we determine the starting direction from who lost the point.
+                    ball = new Ball(sf::Vector2f((window.getSize().x)/2,(float)(rand() % (window.getSize().y-100))+50), oldSpeed, ((ballResult+1) ? 0 : M_PI), "resources/images/death_star/death_star.png");
+
                     deadStarCounter = 0;
                 }
             }
@@ -255,6 +274,7 @@ int main()
             window.draw(starWars);
             menu.draw(window);
         }
+
         window.display();
     }
     // Completely deletes the death_star
@@ -263,8 +283,6 @@ int main()
 
     return 0;
 }
-
-
 
 void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2, Ball &ball) {
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -313,11 +331,8 @@ void checkInput(sf::RenderWindow &window, Paddle &paddle1, Paddle &paddle2, Ball
         } else {
             paddle2.cont(window, 0);
         }
-
     }
 }
-
-
 
 float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2) {
     // Gets the size of the paddles
@@ -325,8 +340,6 @@ float getSpriteDistance(sf::Sprite &sprt1, sf::Sprite &sprt2) {
     float center2 = sprt2.getPosition().y + ((sprt2.getGlobalBounds().height)/2);
     float distance = ((center1 - center2)/((sprt1.getGlobalBounds().height)/2));
 }
-
-
 
 void chooseSong(bool sel){
 
@@ -341,7 +354,7 @@ void chooseSong(bool sel){
 
         music.play();
 
-    }else{
+    } else {
         // Plays imperial march if false
         if (!music.openFromFile("resources/audio/March.ogg"))
         {
