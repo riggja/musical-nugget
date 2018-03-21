@@ -1,3 +1,5 @@
+// Class created by Matthew
+
 #include "menu.h"
 
 Menu::Menu(float width, float height) {
