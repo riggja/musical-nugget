@@ -110,3 +110,23 @@ _Feedback_
 Please add test and function documentation.
 
 Grade: __R__ 3/19/2018
+
+
+_Feedback_
+* Group project is saved in Gitlab __complete__
+* Object-oriented programming __complete__
+* Separate interfaces, implementation, main, and test code __complete__
+* Uses file I/O  __incomplete__
+  * No file i/o
+* Well-commented, “clean”, and well-organized code  __incomplete__
+  * Inconsistent formatting
+* Well-tested code with a driver file __complete__
+* README.md file with known bugs and user operation instructions __complete__
+* Used appropriate concepts to the program __complete__
+  * Examples: vectors, pointers, dynamic memory, string manipulation
+* Quality of the code __complete__
+* Use of advanced concepts __complete__
+
+Please add test and function documentation.
+
+Grade: __M__ 3/22/2018
