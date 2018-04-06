@@ -1,0 +1,5 @@
+To run the ScoreboardTest, use the following line after _OBJS=
+ScoreboardTest.o Scoreboard.o Ball.o Paddle.o
+
+To run the build demo, use the following line after _OBJS=
+game.o menu.o Scoreboard.o Ball.o Paddle.o
